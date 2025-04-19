@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+/*
+By default, tailwindcss includes a CSS reset which wreaks havoc on Astro's
+styles. We can opt out of the CSS reset by swapping `@import "tailwindcss"` for:
+
+@tailwind components;
+@tailwind utilities;
+
+https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
+*/
