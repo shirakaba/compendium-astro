@@ -1,49 +1,11 @@
 ---
 import "../styles/global.css";
+import { ReactLayout } from "../components/ReactLayout";
 ---
 
 <html lang="en" dir="ltr">
-  <head> </head>
-
-  <body class="grid grid-cols-(--doc-cols) gap-x-(--doc-gutter-x)">
-    <!-- Top navbar -->
-    <header class="col-span-3 bg-amber-200">
-      <nav>
-        <ul class="flex gap-x-4 p-2">
-          <li><a href="/about">About</a></li>
-          <li><a href="/docs">Docs</a></li>
-          <li><a href="/blog">Blog</a></li>
-        </ul>
-      </nav>
-    </header>
-
-    <!-- Left-hand sidebar -->
-    <aside class="max-two-cols:hidden bg-cyan-200">
-      <nav>
-        <ul class="flex flex-col">
-          <li><a href="#">Section 1</a></li>
-          <li><a href="#">Section 2</a></li>
-          <li><a href="#">Section 3</a></li>
-        </ul>
-      </nav>
-    </aside>
-
-    <!-- Main content -->
-    <main
-      class="bg-purple-200 max-three-cols:col-span-2 max-two-cols:col-span-3"
-    >
-      <slot />
-    </main>
-
-    <!-- Right-hand sidebar -->
-    <aside class="max-three-cols:hidden bg-pink-200">
-      <nav>
-        <ul class="flex flex-col">
-          <li><a href="#">Section 1</a></li>
-          <li><a href="#">Section 2</a></li>
-          <li><a href="#">Section 3</a></li>
-        </ul>
-      </nav>
-    </aside>
+  <head></head>
+  <body>
+    <ReactLayout><slot /></ReactLayout>
   </body>
 </html>

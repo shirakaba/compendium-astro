@@ -9,39 +9,3 @@ styles. We can opt out of the CSS reset by swapping `@import "tailwindcss"` for:
 
 https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
 */
-
-:root {
-  --left-sidebar-width: 268px;
-  --doc-gutter-x: 8px;
-  --main-content-width: 768px;
-  --right-sidebar-width: 268px;
-
-  /*
-  FIXME: we can't make Media/Container Queries off CSS variables, so we'll have
-  to try another approach.
-  https://github.com/tailwindlabs/tailwindcss/discussions/15113
-  */
-  --two-col-layout: calc(
-    var(--left-sidebar-width) + var(--doc-gutter-x) + var(--main-content-width)
-  );
-  --three-col-layout: calc(
-    var(--two-col-layout) + var(--doc-gutter-x) + var(--right-sidebar-width)
-  );
-  --doc-cols: var(--left-sidebar-width) minmax(var(--main-content-width), 1fr)
-    var(--right-sidebar-width);
-}
-
-@theme {
-  /*
-  We can't make Media/Container Queries off CSS variables, so we hard-code them:
-  https://github.com/tailwindlabs/tailwindcss/discussions/15113
-
-  I tried using SCSS to do the calculations, but Tailwind v4 doesn't support it:
-  https://github.com/tailwindlabs/tailwindcss/issues/14376#issuecomment-2619599509
-  */
-
-  /* 268 + 8 + 768 */
-  --breakpoint-two-cols: 1044px;
-  /* 268 + 8 + 768 + 8 + 268 */
-  --breakpoint-three-cols: 1320px;
-}
