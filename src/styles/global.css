@@ -30,3 +30,18 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
   --doc-cols: var(--left-sidebar-width) minmax(var(--main-content-width), 1fr)
     var(--right-sidebar-width);
 }
+
+@theme {
+  /*
+  We can't make Media/Container Queries off CSS variables, so we hard-code them:
+  https://github.com/tailwindlabs/tailwindcss/discussions/15113
+
+  I tried using SCSS to do the calculations, but Tailwind v4 doesn't support it:
+  https://github.com/tailwindlabs/tailwindcss/issues/14376#issuecomment-2619599509
+  */
+
+  /* 268 + 8 + 768 */
+  --breakpoint-two-cols: 1044px;
+  /* 268 + 8 + 768 + 8 + 268 */
+  --breakpoint-three-cols: 1320px;
+}

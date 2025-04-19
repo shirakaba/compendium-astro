@@ -5,7 +5,7 @@ import "../styles/global.css";
 <html lang="en" dir="ltr">
   <head> </head>
 
-  <body class="grid grid-cols-(--doc-cols) gap-x-(--doc-gutter-x) @container">
+  <body class="grid grid-cols-(--doc-cols) gap-x-(--doc-gutter-x)">
     <!-- Top navbar -->
     <header class="col-span-3 bg-amber-200">
       <nav>
@@ -18,7 +18,7 @@ import "../styles/global.css";
     </header>
 
     <!-- Left-hand sidebar -->
-    <aside class="@max-(--two-col-layout):hidden bg-cyan-200">
+    <aside class="max-two-cols:hidden bg-cyan-200">
       <nav>
         <ul class="flex flex-col">
           <li><a href="#">Section 1</a></li>
@@ -29,12 +29,14 @@ import "../styles/global.css";
     </aside>
 
     <!-- Main content -->
-    <main class="bg-purple-200">
+    <main
+      class="bg-purple-200 max-three-cols:col-span-2 max-two-cols:col-span-3"
+    >
       <slot />
     </main>
 
     <!-- Right-hand sidebar -->
-    <aside class="@max-(--three-col-layout):hidden bg-pink-200">
+    <aside class="max-three-cols:hidden bg-pink-200">
       <nav>
         <ul class="flex flex-col">
           <li><a href="#">Section 1</a></li>
