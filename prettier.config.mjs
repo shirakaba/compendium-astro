@@ -3,10 +3,9 @@
  * @see https://prettier.io/docs/en/configuration.html
  */
 const config = {
-  attributeGroup: ['^(id|name)$', '^data-', '^class$', '$DEFAULT'],
+  attributeGroups: ['^(id|name)$', '^data-', '^class$', '$DEFAULT'],
   bracketSpacing: true,
-  plugins: ['prettier-plugin-organize-attributes'],
-  pluginSearchDirs: false,
+  plugins: ['prettier-plugin-organize-attributes', 'prettier-plugin-astro'],
   singleQuote: true,
   trailingComma: 'es5',
 };

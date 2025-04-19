@@ -6,5 +6,10 @@
     "noEmit": true,
     "allowJs": true
   },
-  "include": ["src", "eslint.config.mjs"]
+  "include": [
+    "src",
+    "astro.config.mjs",
+    "eslint.config.mjs",
+    "prettier.config.mjs"
+  ]
 }

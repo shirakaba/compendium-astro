@@ -1,21 +1,36 @@
-import globals from 'globals';
+import { fileURLToPath } from 'node:url';
+
+import { includeIgnoreFile } from '@eslint/compat';
 import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import pluginReact from 'eslint-plugin-react';
-import importPlugin from 'eslint-plugin-import';
+import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
-import { configs as tsEslintConfigs } from '@typescript-eslint/eslint-plugin';
+import importPlugin from 'eslint-plugin-import';
+import pluginReact from 'eslint-plugin-react';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+
+const { configs: tsEslintConfigs } = tsEslintPlugin;
 const { 'disable-type-checked': disableTypeChecked } = tsEslintConfigs;
+
+const gitignorePath = fileURLToPath(new URL('.gitignore', import.meta.url));
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
+  includeIgnoreFile(gitignorePath),
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     languageOptions: { globals: globals.browser, ecmaVersion: 'latest' },
   },
   pluginJs.configs.recommended,
 
-  // Enable typed linting.
+  // Untyped linting of TypeScript. We override this later with typed linting.
+  ...tseslint.configs.recommended,
+
+  pluginReact.configs.flat.recommended,
+  importPlugin.flatConfigs.recommended,
+  eslintConfigPrettier,
+
+  // Typed linting of TypeScript.
   // https://typescript-eslint.io/getting-started/typed-linting/
   // https://typescript-eslint.io/troubleshooting/typed-linting/#traditional-project-issues
   ...tseslint.configs.recommendedTypeChecked,
@@ -28,10 +43,6 @@ export default [
       },
     },
   },
-
-  pluginReact.configs.flat.recommended,
-  importPlugin.flatConfigs.recommended,
-  eslintConfigPrettier,
   {
     files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
 
@@ -126,6 +137,7 @@ export default [
         },
       ],
 
+      '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
 
       '@typescript-eslint/no-unused-vars': [
