@@ -27,6 +27,9 @@ export default [
   ...tseslint.configs.recommended,
 
   pluginReact.configs.flat.recommended,
+  pluginReact.configs.flat['jsx-runtime'],
+  { settings: { react: { version: 'detect' } } },
+
   importPlugin.flatConfigs.recommended,
   eslintConfigPrettier,
 
@@ -123,21 +126,6 @@ export default [
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
 
-      '@typescript-eslint/no-floating-promises': [
-        'warn',
-        {
-          ignoreIIFE: false,
-        },
-      ],
-
-      '@typescript-eslint/no-misused-promises': [
-        'warn',
-        {
-          checksVoidReturn: false,
-        },
-      ],
-
-      '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
 
       '@typescript-eslint/no-unused-vars': [
@@ -152,6 +140,11 @@ export default [
           ignoreRestSiblings: true,
         },
       ],
+
+      // Never sure what they mean by an "error typed value".
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
     },
   },
 ];

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /*
 By default, tailwindcss includes a CSS reset which wreaks havoc on Astro's
