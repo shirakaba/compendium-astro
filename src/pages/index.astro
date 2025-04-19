@@ -1,0 +1,11 @@
+---
+import { Example } from "../components/Example.tsx";
+import TailwindLayout from "../layouts/Tailwind.astro";
+---
+
+<!-- Any changes saved in here cause a page reload. -->
+<TailwindLayout>
+  <Example className="bg-amber-300">React SSR component</Example>
+  <Example className="bg-green-300" client:load>React CSR component</Example>
+  <div class="bg-cyan-300">HTML SSR component 2</div>
+</TailwindLayout>
