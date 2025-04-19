@@ -1,8 +1,8 @@
-import ArrowBackIos from '@material-design-icons/svg/round/arrow_back_ios.svg';
-import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg';
-import Warning from '@material-design-icons/svg/round/warning.svg';
-import SlabSerif from '@material-symbols/svg-500/outlined/slab_serif.svg';
-import UnfoldMore from '@material-symbols/svg-500/outlined/unfold_more.svg';
+import ArrowBackIos from '@material-design-icons/svg/round/arrow_back_ios.svg?react';
+import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg?react';
+import Warning from '@material-design-icons/svg/round/warning.svg?react';
+import SlabSerif from '@material-symbols/svg-500/outlined/slab_serif.svg?react';
+import UnfoldMore from '@material-symbols/svg-500/outlined/unfold_more.svg?react';
 
 import { Icon, IconButton } from './icon-button';
 

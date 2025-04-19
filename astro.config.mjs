@@ -3,29 +3,55 @@ import react from '@astrojs/react';
 import starlight from '@astrojs/starlight';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
-
+import svgr from 'vite-plugin-svgr';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [starlight({
+  integrations: [
+    starlight({
       title: 'My Docs',
-      social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
-      sidebar: [
-          {
-              label: 'Guides',
-              items: [
-                  // Each item here is one entry in the navigation menu.
-                  { label: 'Example Guide', slug: 'guides/example' },
-              ],
-          },
-          {
-              label: 'Reference',
-              autogenerate: { directory: 'reference' },
-          },
+      social: [
+        {
+          icon: 'github',
+          label: 'GitHub',
+          href: 'https://github.com/withastro/starlight',
+        },
       ],
-  }), react()],
+      sidebar: [
+        {
+          label: 'Guides',
+          items: [
+            // Each item here is one entry in the navigation menu.
+            { label: 'Example Guide', slug: 'guides/example' },
+          ],
+        },
+        {
+          label: 'Reference',
+          autogenerate: { directory: 'reference' },
+        },
+      ],
+    }),
+    react(),
+  ],
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      svgr({
+        include: '**/*.svg?react',
+        svgrOptions: {
+          plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
+          svgoConfig: {
+            plugins: [
+              'preset-default',
+              'removeTitle',
+              'removeDesc',
+              'removeDoctype',
+              'cleanupIds',
+            ],
+          },
+        },
+      }),
+    ],
   },
 });

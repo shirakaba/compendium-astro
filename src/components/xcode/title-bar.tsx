@@ -1,12 +1,12 @@
-import Add from '@material-design-icons/svg/round/add.svg';
-import ExpandMore from '@material-design-icons/svg/round/expand_more.svg';
-import PhoneIphone from '@material-design-icons/svg/round/phone_iphone.svg';
-import PlayArrow from '@material-design-icons/svg/round/play_arrow.svg';
-import Stop from '@material-design-icons/svg/round/stop.svg';
-import Warning from '@material-design-icons/svg/round/warning.svg';
-import DockToLeft from '@material-symbols/svg-500/rounded/dock_to_left.svg';
-import DockToRight from '@material-symbols/svg-500/rounded/dock_to_right.svg';
-import Graph1 from '@material-symbols/svg-500/rounded/graph_1-fill.svg';
+import Add from '@material-design-icons/svg/round/add.svg?react';
+import ExpandMore from '@material-design-icons/svg/round/expand_more.svg?react';
+import PhoneIphone from '@material-design-icons/svg/round/phone_iphone.svg?react';
+import PlayArrow from '@material-design-icons/svg/round/play_arrow.svg?react';
+import Stop from '@material-design-icons/svg/round/stop.svg?react';
+import Warning from '@material-design-icons/svg/round/warning.svg?react';
+import DockToLeft from '@material-symbols/svg-500/rounded/dock_to_left.svg?react';
+import DockToRight from '@material-symbols/svg-500/rounded/dock_to_right.svg?react';
+import Graph1 from '@material-symbols/svg-500/rounded/graph_1-fill.svg?react';
 import { cva } from 'class-variance-authority';
 import { match } from 'ts-pattern';
 
@@ -106,7 +106,7 @@ export function TargetBar({ state }: { state: 'running' | 'built' }) {
           className="group flex min-w-[calc(16px+4px+1em)] shrink-[999999] items-center overflow-hidden rounded-md p-1 hover:bg-[#DBDAD9] dark:hover:bg-[#4C4B4A]"
         >
           <img
-            src={AppIcon}
+            src={AppIcon.src}
             width="16"
             height="16"
             className="scale mr-1 shrink-0"

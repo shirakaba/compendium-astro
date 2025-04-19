@@ -1,4 +1,4 @@
-import DockToRight from '@material-symbols/svg-500/rounded/dock_to_right.svg';
+import DockToRight from '@material-symbols/svg-500/rounded/dock_to_right.svg?react';
 import type { PropsWithChildren } from 'react';
 import { twMerge } from 'tailwind-merge';
 

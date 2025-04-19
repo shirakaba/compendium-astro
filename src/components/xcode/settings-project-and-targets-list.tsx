@@ -1,4 +1,4 @@
-import SlabSerif from '@material-symbols/svg-500/outlined/slab_serif.svg';
+import SlabSerif from '@material-symbols/svg-500/outlined/slab_serif.svg?react';
 import type { PropsWithChildren } from 'react';
 
 import AppIcon from './app-icon.png';
@@ -51,7 +51,12 @@ export function Project({ label, selected }: ItemProps & { label: string }) {
 export function Target({ label, selected }: ItemProps & { label: string }) {
   return (
     <Item selected={selected}>
-      <img src={AppIcon} width="16" height="16" className="scale shrink-0" />
+      <img
+        src={AppIcon.src}
+        width="16"
+        height="16"
+        className="scale shrink-0"
+      />
       <span className="text-xs font-medium select-none">{label}</span>
     </Item>
   );

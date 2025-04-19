@@ -1,9 +1,9 @@
-import ArrowBackIos from '@material-design-icons/svg/round/arrow_back_ios.svg';
-import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg';
-import AddColumnRight from '@material-symbols/svg-500/outlined/add_column_right.svg';
-import GridView from '@material-symbols/svg-500/outlined/grid_view.svg';
-import SlabSerif from '@material-symbols/svg-500/outlined/slab_serif.svg';
-import SyncAlt from '@material-symbols/svg-500/outlined/sync_alt.svg';
+import ArrowBackIos from '@material-design-icons/svg/round/arrow_back_ios.svg?react';
+import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg?react';
+import AddColumnRight from '@material-symbols/svg-500/outlined/add_column_right.svg?react';
+import GridView from '@material-symbols/svg-500/outlined/grid_view.svg?react';
+import SlabSerif from '@material-symbols/svg-500/outlined/slab_serif.svg?react';
+import SyncAlt from '@material-symbols/svg-500/outlined/sync_alt.svg?react';
 
 import { Icon, IconButton } from './icon-button';
 
