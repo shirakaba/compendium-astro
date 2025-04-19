@@ -6,5 +6,5 @@ export function Server({
   children,
   className,
 }: PropsWithChildren<{ className?: string; }>){
-  return (<h1 className={twMerge("text-4xl", className)}>{children}</h1>);
+  return (<h1 className={twMerge("text-4xl", className)}>{children} 2</h1>);
 }

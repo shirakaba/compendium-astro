@@ -1,12 +1,12 @@
 ---
-import TailwindLayout from "../layouts/Tailwind.astro";
+import Layout from "../layouts/Layout.astro";
 import { Server } from "../components/Server.tsx";
 import { Client } from "../components/Client.tsx";
 ---
 
 <!-- Any changes saved in a .astro file always cause a page reload. -->
-<TailwindLayout>
+<Layout>
   <h1 class="text-4xl bg-cyan-300">HTML SSR component</h1>
   <Server className="bg-amber-300">React SSR component</Server>
   <Client className="bg-green-300" client:load>React CSR component</Client>
-</TailwindLayout>
+</Layout>
