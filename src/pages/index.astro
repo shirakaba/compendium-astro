@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { Server } from '../components/Server.tsx';
 import { Client } from '../components/Client.tsx';
+import { XcodeWindow } from '../components/xcode/window';
 ---
 
 <!-- Any changes saved in a .astro file always cause a page reload. -->
@@ -10,3 +11,9 @@ import { Client } from '../components/Client.tsx';
   <Server className="bg-amber-300">React SSR component</Server>
   <Client className="bg-green-300" client:load>React CSR component</Client>
 </Layout>
+
+<div class="px-[16px]">
+  <XcodeWindow className="[&>div]:w-[942px]" />
+</div>
+
+<!-- ![Build phases](build-phases-light.png#gh-light-mode-only)![Build phases](build-phases-dark.png#gh-dark-mode-only) -->

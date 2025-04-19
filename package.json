@@ -14,15 +14,20 @@
   "dependencies": {
     "@astrojs/react": "^4.2.4",
     "@astrojs/starlight": "^0.34.0",
+    "@material-design-icons/svg": "^0.14.15",
+    "@material-symbols/svg-500": "^0.31.2",
+    "@material-symbols/svg-700": "^0.31.2",
     "@tailwindcss/vite": "^4.1.4",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "astro": "^5.6.1",
+    "class-variance-authority": "^0.7.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sharp": "^0.32.5",
     "tailwind-merge": "^3.2.0",
-    "tailwindcss": "^4.1.4"
+    "tailwindcss": "^4.1.4",
+    "ts-pattern": "^5.7.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.8",
