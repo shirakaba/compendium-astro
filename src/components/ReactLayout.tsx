@@ -1,9 +1,19 @@
 import type { PropsWithChildren } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { DarkModeContextProvider, DarkModeToggle } from './DarkModeToggle';
+
 const enableSidebars = false;
 
 export function ReactLayout({ children }: PropsWithChildren) {
+  return (
+    <DarkModeContextProvider>
+      <UI>{children}</UI>
+    </DarkModeContextProvider>
+  );
+}
+
+function UI({ children }: PropsWithChildren) {
   return (
     <div className="grid grid-cols-[248px_minmax(768px,1fr)_248px] gap-x-2">
       {/* Top navbar */}
@@ -18,6 +28,9 @@ export function ReactLayout({ children }: PropsWithChildren) {
             </li>
             <li>
               <a href="/blog">Blog</a>
+            </li>
+            <li>
+              <DarkModeToggle />
             </li>
           </ul>
         </nav>
