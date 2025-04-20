@@ -1,6 +1,8 @@
 import type { PropsWithChildren } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { DarkModeToggle } from './DarkModeToggle';
+
 const enableSidebars = false;
 
 export function ReactLayout({ children }: PropsWithChildren) {
@@ -18,6 +20,9 @@ export function ReactLayout({ children }: PropsWithChildren) {
             </li>
             <li>
               <a href="/blog">Blog</a>
+            </li>
+            <li>
+              <DarkModeToggle />
             </li>
           </ul>
         </nav>
