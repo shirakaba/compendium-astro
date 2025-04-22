@@ -1,11 +1,16 @@
-import type { PropsWithChildren } from 'react';
+import { useEffect, type PropsWithChildren } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { DarkModeToggle } from './DarkModeToggle';
+import { DarkModeToggle, resolveTheme, setTheme } from './DarkModeToggle';
 
 const enableSidebars = false;
 
 export function ReactLayout({ children }: PropsWithChildren) {
+  // On mount, set data-theme on the document and persist into localStorage.
+  useEffect(() => {
+    setTheme(resolveTheme());
+  }, []);
+
   return (
     <div className="grid grid-cols-[248px_minmax(768px,1fr)_248px] gap-x-2">
       {/* Top navbar */}

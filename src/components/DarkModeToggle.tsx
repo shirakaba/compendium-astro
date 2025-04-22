@@ -1,4 +1,9 @@
 export function DarkModeToggle() {
+  // TODO: Follow Josh Comeau's approach, as SSR components can't know the theme
+  // up front as they depend on client-side state.
+  // https://www.joshwcomeau.com/react/dark-mode/
+  // https://github.com/joshwcomeau/dark-mode-minimal/blob/master/src/components/DarkToggle.js
+
   // https://docs.astro.build/en/tutorial/6-islands/2/#add-and-style-a-theme-toggle-icon
   // https://tailwindcss.com/docs/dark-mode#supporting-system-preference-and-manual-selection
   return (
@@ -6,10 +11,11 @@ export function DarkModeToggle() {
       className="border-0 bg-none"
       onClick={() => {
         const resolvedTheme = resolveTheme();
-        const oppositeTheme = resolvedTheme === 'light' ? 'dark' : 'light';
         console.log('clicked!', resolvedTheme);
-        setDataThemeAttribute(oppositeTheme);
-        window['localStorage'].setItem('theme', oppositeTheme);
+
+        const oppositeTheme = resolvedTheme === 'light' ? 'dark' : 'light';
+        setTheme(oppositeTheme);
+        persistTheme(oppositeTheme);
       }}
     >
       <svg width="30px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -29,29 +35,26 @@ export function DarkModeToggle() {
 }
 
 type Theme = 'light' | 'dark';
+const defaultMode: Theme = 'light';
+const respectPrefersColorScheme: boolean = true;
 
 export function resolveTheme() {
-  const defaultMode: Theme = 'light';
-  const respectPrefersColorScheme = true;
+  const explicitTheme = getQueryStringTheme() || getStoredTheme();
+  if (explicitTheme === 'light' || explicitTheme === 'dark') {
+    return explicitTheme;
+  }
 
-  const initialTheme = getQueryStringTheme() || getStoredTheme();
-  if (initialTheme === 'light' || initialTheme === 'dark') {
-    return setDataThemeAttribute(initialTheme);
-  } else {
-    if (
-      respectPrefersColorScheme &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      return setDataThemeAttribute('dark');
-    } else if (
-      respectPrefersColorScheme &&
-      window.matchMedia('(prefers-color-scheme: light)').matches
-    ) {
-      return setDataThemeAttribute('light');
+  if (respectPrefersColorScheme) {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
     }
 
-    return setDataThemeAttribute(defaultMode);
+    if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      return 'light';
+    }
   }
+
+  return defaultMode;
 }
 
 function getQueryStringTheme() {
@@ -70,7 +73,10 @@ function getStoredTheme() {
   }
 }
 
-function setDataThemeAttribute(theme: 'light' | 'dark') {
+export function setTheme(theme: 'light' | 'dark') {
   document.documentElement.setAttribute('data-theme', theme);
-  return theme;
+}
+
+export function persistTheme(theme: 'light' | 'dark') {
+  window['localStorage'].setItem('theme', theme);
 }
