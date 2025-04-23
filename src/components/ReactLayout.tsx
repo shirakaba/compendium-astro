@@ -14,11 +14,7 @@ export function ReactLayout({ children }: PropsWithChildren) {
 }
 
 function App({ children }: PropsWithChildren) {
-  const theme = useTheme();
-
-  if (!theme) {
-    return null;
-  }
+  useTheme();
 
   return (
     <div className="grid grid-cols-[248px_minmax(768px,1fr)_248px] gap-x-2">

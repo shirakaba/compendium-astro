@@ -42,25 +42,22 @@ export function DarkModeToggle() {
 /**
  * -   "light": light mode
  * -    "dark": dark mode
- * -      null: context available, but light/dark mode not yet resolved
  * - undefined: context unavailable; need to use within ThemeProvider
  */
-const ThemeContext = createContext<Theme | null | undefined>(undefined);
+const ThemeContext = createContext<Theme | undefined>(undefined);
 
 export function ThemeProvider({ children }: PropsWithChildren) {
-  const [preference, setPreference] = useState<Theme | null>(null);
-  const [resolvedTheme, setResolvedTheme] = useState<Theme | null>(null);
+  const [resolvedTheme, setResolvedTheme] = useState<Theme>(
+    (resolveExplicitTheme() ??
+      window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ? 'dark'
+      : 'light'
+  );
 
   // Track changes in user agent theme preference.
   useEffect(() => {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     prefersDark.addEventListener('change', onPrefersDarkChange);
-
-    setPreference(
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-    );
 
     return () => {
       prefersDark.removeEventListener('change', onPrefersDarkChange);
@@ -70,18 +67,16 @@ export function ThemeProvider({ children }: PropsWithChildren) {
       this: MediaQueryList,
       { matches: prefersDark }: MediaQueryListEvent
     ) {
-      setPreference(prefersDark ? 'dark' : 'light');
+      applyThemeChange(prefersDark ? 'dark' : 'light');
+    }
+
+    function applyThemeChange(preference: Theme) {
+      const explicitTheme = resolveExplicitTheme();
+      const resolvedTheme = explicitTheme ?? preference;
+      setDataTheme(resolvedTheme);
+      setResolvedTheme(resolvedTheme);
     }
   }, []);
-
-  // Sync React and DOM state with both user agent theme preference and explicit
-  // setting. The explicit setting, if set, overrides the user agent.
-  useEffect(() => {
-    const explicitTheme = resolveExplicitTheme();
-    const resolvedTheme = explicitTheme ?? preference;
-    setDataTheme(resolvedTheme);
-    setResolvedTheme(resolvedTheme);
-  }, [preference]);
 
   return (
     <ThemeContext.Provider value={resolvedTheme}>

@@ -13,6 +13,6 @@ import { ReactLayout } from '../components/ReactLayout';
     https://stackoverflow.com/questions/74875277/onclick-event-not-working-for-react-component-in-astro
     https://docs.astro.build/en/guides/framework-components/#hydrating-interactive-components
     -->
-    <ReactLayout client:load><slot /></ReactLayout>
+    <ReactLayout client:only><slot /></ReactLayout>
   </body>
 </html>
