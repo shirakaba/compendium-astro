@@ -1,10 +1,13 @@
 ---
+import Themes from 'astro-themes';
 import '../styles/global.css';
 import { ReactLayout } from '../components/ReactLayout';
 ---
 
 <html lang="en" dir="ltr">
-  <head></head>
+  <head>
+    <Themes defaultTheme="light" />
+  </head>
   <body>
     <!--
     We have to specify a hydration rule for any interactive components.
@@ -13,6 +16,6 @@ import { ReactLayout } from '../components/ReactLayout';
     https://stackoverflow.com/questions/74875277/onclick-event-not-working-for-react-component-in-astro
     https://docs.astro.build/en/guides/framework-components/#hydrating-interactive-components
     -->
-    <ReactLayout client:only><slot /></ReactLayout>
+    <ReactLayout client:load><slot /></ReactLayout>
   </body>
 </html>

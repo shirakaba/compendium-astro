@@ -1,26 +1,16 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type PropsWithChildren,
-} from 'react';
-
 export function DarkModeToggle() {
-  // https://www.joshwcomeau.com/react/dark-mode/
-  // https://github.com/joshwcomeau/dark-mode-minimal/blob/master/src/components/DarkToggle.js
-  //
-  // https://docs.astro.build/en/tutorial/6-islands/2/#add-and-style-a-theme-toggle-icon
-  // https://tailwindcss.com/docs/dark-mode#supporting-system-preference-and-manual-selection
   return (
     <button
       className="border-0 bg-none"
       onClick={() => {
-        // const resolvedTheme = resolveTheme();
-        // console.log('clicked!', resolvedTheme);
-        // const oppositeTheme = resolvedTheme === 'light' ? 'dark' : 'light';
-        // setDataTheme(oppositeTheme);
-        // persistTheme(oppositeTheme);
+        const currentTheme = getDataTheme();
+
+        // https://github.com/alex-grover/astro-themes
+        document.dispatchEvent(
+          new CustomEvent('set-theme', {
+            detail: currentTheme === 'light' ? 'dark' : 'light',
+          })
+        );
       }}
     >
       <svg width="30px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -39,99 +29,16 @@ export function DarkModeToggle() {
   );
 }
 
-/**
- * -   "light": light mode
- * -    "dark": dark mode
- * - undefined: context unavailable; need to use within ThemeProvider
- */
-const ThemeContext = createContext<Theme | undefined>(undefined);
-
-export function ThemeProvider({ children }: PropsWithChildren) {
-  const [resolvedTheme, setResolvedTheme] = useState<Theme>(
-    (resolveExplicitTheme() ??
-      window.matchMedia('(prefers-color-scheme: dark)').matches)
-      ? 'dark'
-      : 'light'
-  );
-
-  // Track changes in user agent theme preference.
-  useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    prefersDark.addEventListener('change', onPrefersDarkChange);
-
-    return () => {
-      prefersDark.removeEventListener('change', onPrefersDarkChange);
-    };
-
-    function onPrefersDarkChange(
-      this: MediaQueryList,
-      { matches: prefersDark }: MediaQueryListEvent
-    ) {
-      applyThemeChange(prefersDark ? 'dark' : 'light');
-    }
-
-    function applyThemeChange(preference: Theme) {
-      const explicitTheme = resolveExplicitTheme();
-      const resolvedTheme = explicitTheme ?? preference;
-      setDataTheme(resolvedTheme);
-      setResolvedTheme(resolvedTheme);
-    }
-  }, []);
-
-  return (
-    <ThemeContext.Provider value={resolvedTheme}>
-      {children}
-    </ThemeContext.Provider>
-  );
-}
-
-export function useTheme() {
-  const theme = useContext(ThemeContext);
-  if (theme === void 0) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-
-  return theme;
-}
-
-export type Theme = 'light' | 'dark';
-
-export function resolveExplicitTheme() {
-  const explicitTheme = getQueryStringTheme() || getPersistedTheme();
-  switch (explicitTheme) {
+export function getDataTheme() {
+  const value = document.documentElement.getAttribute('data-theme');
+  switch (value) {
     case 'light':
       return 'light';
     case 'dark':
       return 'dark';
     default:
-      return null;
-  }
-}
-
-function getQueryStringTheme() {
-  try {
-    return new URLSearchParams(window.location.search).get('theme');
-  } catch {
-    return;
-  }
-}
-
-function getPersistedTheme() {
-  return window.localStorage.getItem('theme');
-}
-
-export function setDataTheme(theme: 'light' | 'dark' | null) {
-  if (theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-  }
-}
-
-export function persistTheme(theme: 'light' | 'dark' | null) {
-  if (theme) {
-    window.localStorage.setItem('theme', theme);
-  } else {
-    window.localStorage.removeItem('theme');
+      throw new Error(
+        `Expected data-theme to be one of 'light' or 'dark', but got ${value}.`
+      );
   }
 }
