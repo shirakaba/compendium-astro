@@ -1,15 +1,24 @@
-import { useEffect, type PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { DarkModeToggle, resolveTheme, setTheme } from './DarkModeToggle';
+import { DarkModeToggle, ThemeProvider, useTheme } from './DarkModeToggle';
 
 const enableSidebars = false;
 
 export function ReactLayout({ children }: PropsWithChildren) {
-  // On mount, set data-theme on the document and persist into localStorage.
-  useEffect(() => {
-    setTheme(resolveTheme());
-  }, []);
+  return (
+    <ThemeProvider>
+      <App>{children}</App>
+    </ThemeProvider>
+  );
+}
+
+function App({ children }: PropsWithChildren) {
+  const theme = useTheme();
+
+  if (!theme) {
+    return null;
+  }
 
   return (
     <div className="grid grid-cols-[248px_minmax(768px,1fr)_248px] gap-x-2">

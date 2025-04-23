@@ -1,9 +1,15 @@
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type PropsWithChildren,
+} from 'react';
+
 export function DarkModeToggle() {
-  // TODO: Follow Josh Comeau's approach, as SSR components can't know the theme
-  // up front as they depend on client-side state.
   // https://www.joshwcomeau.com/react/dark-mode/
   // https://github.com/joshwcomeau/dark-mode-minimal/blob/master/src/components/DarkToggle.js
-
+  //
   // https://docs.astro.build/en/tutorial/6-islands/2/#add-and-style-a-theme-toggle-icon
   // https://tailwindcss.com/docs/dark-mode#supporting-system-preference-and-manual-selection
   return (
@@ -14,7 +20,7 @@ export function DarkModeToggle() {
         console.log('clicked!', resolvedTheme);
 
         const oppositeTheme = resolvedTheme === 'light' ? 'dark' : 'light';
-        setTheme(oppositeTheme);
+        setDataTheme(oppositeTheme);
         persistTheme(oppositeTheme);
       }}
     >
@@ -34,7 +40,38 @@ export function DarkModeToggle() {
   );
 }
 
-type Theme = 'light' | 'dark';
+/**
+ * -   "light": light mode
+ * -    "dark": dark mode
+ * -      null: context available, but light/dark mode not yet resolved
+ * - undefined: context unavailable; need to use within ThemeProvider
+ */
+const ThemeContext = createContext<Theme | null | undefined>(undefined);
+
+export function ThemeProvider({ children }: PropsWithChildren) {
+  const [theme, setTheme] = useState<Theme | null>(null);
+
+  useEffect(() => {
+    const theme = resolveTheme();
+    setDataTheme(theme);
+    setTheme(theme);
+  }, []);
+
+  return (
+    <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+  );
+}
+
+export function useTheme() {
+  const theme = useContext(ThemeContext);
+  if (theme === void 0) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+
+  return theme;
+}
+
+export type Theme = 'light' | 'dark';
 const defaultMode: Theme = 'light';
 const respectPrefersColorScheme: boolean = true;
 
@@ -73,7 +110,7 @@ function getStoredTheme() {
   }
 }
 
-export function setTheme(theme: 'light' | 'dark') {
+export function setDataTheme(theme: 'light' | 'dark') {
   document.documentElement.setAttribute('data-theme', theme);
 }
 
