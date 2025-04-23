@@ -16,12 +16,11 @@ export function DarkModeToggle() {
     <button
       className="border-0 bg-none"
       onClick={() => {
-        const resolvedTheme = resolveTheme();
-        console.log('clicked!', resolvedTheme);
-
-        const oppositeTheme = resolvedTheme === 'light' ? 'dark' : 'light';
-        setDataTheme(oppositeTheme);
-        persistTheme(oppositeTheme);
+        // const resolvedTheme = resolveTheme();
+        // console.log('clicked!', resolvedTheme);
+        // const oppositeTheme = resolvedTheme === 'light' ? 'dark' : 'light';
+        // setDataTheme(oppositeTheme);
+        // persistTheme(oppositeTheme);
       }}
     >
       <svg width="30px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -49,13 +48,19 @@ export function DarkModeToggle() {
 const ThemeContext = createContext<Theme | null | undefined>(undefined);
 
 export function ThemeProvider({ children }: PropsWithChildren) {
-  const [theme, setTheme] = useState<Theme | null>(null);
+  const [preference, setPreference] = useState<Theme | null>(null);
+  const [resolvedTheme, setResolvedTheme] = useState<Theme | null>(null);
 
+  // Track changes in user agent theme preference.
   useEffect(() => {
-    applyTheme(resolveTheme());
-
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     prefersDark.addEventListener('change', onPrefersDarkChange);
+
+    setPreference(
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+    );
 
     return () => {
       prefersDark.removeEventListener('change', onPrefersDarkChange);
@@ -65,18 +70,23 @@ export function ThemeProvider({ children }: PropsWithChildren) {
       this: MediaQueryList,
       { matches: prefersDark }: MediaQueryListEvent
     ) {
-      const preference = prefersDark ? 'dark' : 'light';
-      applyTheme(preference);
-    }
-
-    function applyTheme(theme: Theme) {
-      setDataTheme(theme);
-      setTheme(theme);
+      setPreference(prefersDark ? 'dark' : 'light');
     }
   }, []);
 
+  // Sync React and DOM state with both user agent theme preference and explicit
+  // setting. The explicit setting, if set, overrides the user agent.
+  useEffect(() => {
+    const explicitTheme = resolveExplicitTheme();
+    const resolvedTheme = explicitTheme ?? preference;
+    setDataTheme(resolvedTheme);
+    setResolvedTheme(resolvedTheme);
+  }, [preference]);
+
   return (
-    <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={resolvedTheme}>
+      {children}
+    </ThemeContext.Provider>
   );
 }
 
@@ -90,48 +100,43 @@ export function useTheme() {
 }
 
 export type Theme = 'light' | 'dark';
-const defaultMode: Theme = 'light';
-const respectPrefersColorScheme: boolean = true;
 
-export function resolveTheme() {
-  const explicitTheme = getQueryStringTheme() || getStoredTheme();
-  if (explicitTheme === 'light' || explicitTheme === 'dark') {
-    return explicitTheme;
-  }
-
-  if (respectPrefersColorScheme) {
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-
-    if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+export function resolveExplicitTheme() {
+  const explicitTheme = getQueryStringTheme() || getPersistedTheme();
+  switch (explicitTheme) {
+    case 'light':
       return 'light';
-    }
+    case 'dark':
+      return 'dark';
+    default:
+      return null;
   }
-
-  return defaultMode;
 }
 
 function getQueryStringTheme() {
   try {
-    return new URLSearchParams(window.location.search).get('docusaurus-theme');
+    return new URLSearchParams(window.location.search).get('theme');
   } catch {
     return;
   }
 }
 
-function getStoredTheme() {
-  try {
-    return window['localStorage'].getItem('theme');
-  } catch {
-    return;
+function getPersistedTheme() {
+  return window.localStorage.getItem('theme');
+}
+
+export function setDataTheme(theme: 'light' | 'dark' | null) {
+  if (theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+  } else {
+    document.documentElement.removeAttribute('data-theme');
   }
 }
 
-export function setDataTheme(theme: 'light' | 'dark') {
-  document.documentElement.setAttribute('data-theme', theme);
-}
-
-export function persistTheme(theme: 'light' | 'dark') {
-  window['localStorage'].setItem('theme', theme);
+export function persistTheme(theme: 'light' | 'dark' | null) {
+  if (theme) {
+    window.localStorage.setItem('theme', theme);
+  } else {
+    window.localStorage.removeItem('theme');
+  }
 }
