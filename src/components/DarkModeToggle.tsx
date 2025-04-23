@@ -52,9 +52,27 @@ export function ThemeProvider({ children }: PropsWithChildren) {
   const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
-    const theme = resolveTheme();
-    setDataTheme(theme);
-    setTheme(theme);
+    applyTheme(resolveTheme());
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    prefersDark.addEventListener('change', onPrefersDarkChange);
+
+    return () => {
+      prefersDark.removeEventListener('change', onPrefersDarkChange);
+    };
+
+    function onPrefersDarkChange(
+      this: MediaQueryList,
+      { matches: prefersDark }: MediaQueryListEvent
+    ) {
+      const preference = prefersDark ? 'dark' : 'light';
+      applyTheme(preference);
+    }
+
+    function applyTheme(theme: Theme) {
+      setDataTheme(theme);
+      setTheme(theme);
+    }
   }, []);
 
   return (
