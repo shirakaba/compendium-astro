@@ -10,6 +10,7 @@
     "src",
     "astro.config.mjs",
     "eslint.config.mjs",
-    "prettier.config.mjs"
+    "prettier.config.mjs",
+    "vite.config.ts"
   ]
 }

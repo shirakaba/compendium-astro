@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "scratchpad": "vite",
     "format": "prettier --write \"**/*.{js,ts,jsx,tsx,astro,html,css,md}\"",
     "lint": "eslint --fix",
     "dev": "astro dev",
