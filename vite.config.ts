@@ -7,6 +7,11 @@ import svgr from 'vite-plugin-svgr';
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Disable SSR to avoid losing selected element in DevTools upon HMR
+  ssr: {
+    noExternal: true,
+    external: [],
+  },
   plugins: [
     react(),
     tailwindcss(),
