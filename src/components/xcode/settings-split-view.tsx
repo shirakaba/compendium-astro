@@ -34,12 +34,12 @@ export function SettingsSplitView({
         // Remove all transition classes at the start of a drag, as otherwise it
         // kills performance. We'll restore them post-drag.
         const removedClasses = new Set<string>();
-        sidebarRef.current.classList.forEach((value) => {
+        sidebar.classList.forEach((value) => {
           if (!value.startsWith('transition')) {
             return;
           }
           removedClasses.add(value);
-          sidebarRef.current.classList.remove(value);
+          sidebar.classList.remove(value);
         });
 
         resizeStateRef.current = {
@@ -54,9 +54,9 @@ export function SettingsSplitView({
       // Not really needed, but stops the event bubbling further needlessly.
       event.stopPropagation();
 
-      const sidebarClientX = sidebarRef.current.getBoundingClientRect().x;
+      const sidebarClientX = sidebar.getBoundingClientRect().x;
       const width = event.clientX - sidebarClientX;
-      sidebarRef.current.style.setProperty('--width', `${width}px`);
+      sidebar.style.setProperty('--width', `${width}px`);
     },
     []
   );
@@ -69,7 +69,7 @@ export function SettingsSplitView({
 
     // The expected state.
     if (resizeStateRef.current.type === 'resizing') {
-      sidebarRef.current.classList.add(
+      sidebarRef.current?.classList.add(
         ...resizeStateRef.current.removedClasses
       );
     }
@@ -92,7 +92,6 @@ export function SettingsSplitView({
               ? '0px'
               : 'calc(-1 * min(max(170px, var(--width)), calc(100%-80px)) - 1px)',
         }}
-        // @ts-expect-error Supported in React 19, but not yet in typings
         inert={projectAndTargetsListVisibility === 'hidden'}
       >
         <ProjectAndTargetsList />
@@ -146,16 +145,16 @@ function DragHandle({
         },
       };
 
-      containerRef.current.setPointerCapture(nativeEvent.pointerId);
-      containerRef.current.addEventListener('pointermove', onPointerMove);
+      containerRef.current?.setPointerCapture(nativeEvent.pointerId);
+      containerRef.current?.addEventListener('pointermove', onPointerMove);
     },
     []
   );
   const onPointerFinish = useCallback(
     ({ nativeEvent }: React.PointerEvent<HTMLDivElement>) => {
       pointerStateRef.current = { type: 'pointerup' };
-      containerRef.current.releasePointerCapture(nativeEvent.pointerId);
-      containerRef.current.removeEventListener('pointermove', onPointerMove);
+      containerRef.current?.releasePointerCapture(nativeEvent.pointerId);
+      containerRef.current?.removeEventListener('pointermove', onPointerMove);
       onResizeFinish(nativeEvent);
     },
     [onResizeFinish]
@@ -170,7 +169,7 @@ function DragHandle({
       {...(disabled ? { 'data-disabled': '' } : {})}
       draggable={false}
       // TODO: Change cursor to one-sided once it's at its min width
-      className="relative box-content w-px touch-none not-data-[disabled]:cursor-ew-resize"
+      className="relative box-content w-px touch-none not-data-[disabled]:cursor-col-resize"
     >
       {/* The hitbox. */}
       <div className="absolute -inset-x-2 h-full"></div>
