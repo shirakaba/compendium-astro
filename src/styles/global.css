@@ -120,35 +120,6 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
   --permit-empty-ruleset: 0;
 }
 
-/*
- * Some temporary styles to help me during dev.
- * Based on: https://stackoverflow.com/a/78192279/5951226
- */
-.docs-doc-id-react-native\/how-apple-builds-work\/apple-platforms .col {
-  max-width: none !important;
-}
-.docs-doc-id-react-native\/how-apple-builds-work\/apple-platforms
-  img[alt='Build phases'] {
-  width: 1052px;
-  max-width: none;
-}
-.docs-doc-id-react-native\/how-apple-builds-work\/apple-platforms
-  .theme-doc-sidebar-container {
-  display: none;
-}
-
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-}
-
 [data-theme='light'] img[src$='#gh-dark-mode-only'],
 [data-theme='dark'] img[src$='#gh-light-mode-only'] {
   display: none;
