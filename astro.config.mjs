@@ -40,10 +40,21 @@ export default defineConfig({
       svgr({
         include: '**/*.svg?react',
         svgrOptions: {
+          // See DEFAULT_CONFIG in node_modules/@svgr/core/dist/index.js
+          dimensions: false,
           plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
           svgoConfig: {
             plugins: [
-              'preset-default',
+              {
+                name: 'preset-default',
+                params: {
+                  overrides: {
+                    // We must preserve the viewbox in order for the SVG to scale
+                    // to fit the specified `width` and `height`.
+                    removeViewBox: false,
+                  },
+                },
+              },
               'removeTitle',
               'removeDesc',
               'removeDoctype',
