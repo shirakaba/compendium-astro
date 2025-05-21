@@ -3,7 +3,7 @@ import { getDataTheme } from '../utils/getDataTheme';
 export function DarkModeToggle() {
   return (
     <button
-      className="border-0 bg-none hover:bg-black/10 dark:hover:bg-white/30 rounded-full p-[5px]"
+      className="border-0 bg-none hover:bg-black/10 dark:hover:bg-white/30 rounded-full p-[5px] size-8"
       onClick={() => {
         const currentTheme = getDataTheme();
 
@@ -15,7 +15,12 @@ export function DarkModeToggle() {
         );
       }}
     >
-      <svg width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <svg
+        width="24px"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        className="size-full"
+      >
         <path
           className="fill-current dark:fill-transparent"
           fillRule="evenodd"

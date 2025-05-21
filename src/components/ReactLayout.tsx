@@ -15,7 +15,7 @@ function App({ children }: PropsWithChildren) {
       {/* Top navbar */}
       <header className="col-span-3 bg-amber-200">
         <nav>
-          <ul className="flex gap-x-4 p-2">
+          <ul className="flex items-center gap-x-4 p-2">
             <li>
               <a href="/about">About</a>
             </li>

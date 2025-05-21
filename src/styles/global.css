@@ -19,6 +19,8 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
  * https://github.com/tailwindlabs/tailwindcss/issues/14091#issuecomment-2284558932
  */
 :root {
+  font-size: 16px;
+
   --appkit-window-shadow-offset-x: 0px;
   --appkit-window-shadow-offset-y: 20px;
   --appkit-window-shadow-blur-radius: 40px;
