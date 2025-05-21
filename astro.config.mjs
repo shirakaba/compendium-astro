@@ -6,30 +6,36 @@ import { defineConfig } from 'astro/config';
 import svgr from 'vite-plugin-svgr';
 
 // https://astro.build/config
+// https://starlight.astro.build/guides/authoring-content/
 export default defineConfig({
   integrations: [
     starlight({
-      title: 'My Docs',
+      title: "Jamie's Compendium",
       customCss: ['./src/styles/global.css'],
       social: [
         {
           icon: 'github',
           label: 'GitHub',
-          href: 'https://github.com/withastro/starlight',
+          // TODO: Swap compendium-astro for compendium
+          href: 'https://github.com/shirakaba/compendium',
         },
       ],
       sidebar: [
+        { label: 'About', slug: 'about' },
         {
-          label: 'Guides',
-          items: [
-            // Each item here is one entry in the navigation menu.
-            { label: 'Example Guide', slug: 'guides/example' },
-          ],
+          label: 'Native dev',
+          autogenerate: { directory: 'native-dev' },
         },
         {
-          label: 'Reference',
-          autogenerate: { directory: 'reference' },
+          label: 'Web dev',
+          autogenerate: { directory: 'web-dev' },
         },
+        {
+          label: 'Backend dev',
+          autogenerate: { directory: 'backend-dev' },
+        },
+        // TODO: Non-dev categories. Could have anything from cookery to
+        // investing.
       ],
     }),
     react(),
@@ -50,8 +56,8 @@ export default defineConfig({
                 name: 'preset-default',
                 params: {
                   overrides: {
-                    // We must preserve the viewbox in order for the SVG to scale
-                    // to fit the specified `width` and `height`.
+                    // We must preserve the viewbox in order for the SVG to
+                    // scale to fit the specified `width` and `height`.
                     removeViewBox: false,
                   },
                 },
