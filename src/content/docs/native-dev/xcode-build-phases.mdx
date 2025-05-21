@@ -5,7 +5,9 @@ sidebar:
   label: Xcode build phases
 ---
 
-Testing
+Xcode builds run sequentially, in **phases**. When creating a new Xcode project following one of the built-in templates (e.g. app, framework, static library, etc.), you'll find a few of these phases to have been prepopulated (e.g. "Compile Sources" and "Copy Bundle Resources").
+
+When creating a project using a framework such as React Native, you may notice additional phases beyond the ones those built-in templates provide. These are the secret sauce behind how the framework builds and runs!
 
 import { XcodeWindow } from '../../../components/xcode/window';
 
