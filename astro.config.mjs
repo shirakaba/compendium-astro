@@ -10,6 +10,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'My Docs',
+      customCss: ['./src/styles/global.css'],
       social: [
         {
           icon: 'github',
