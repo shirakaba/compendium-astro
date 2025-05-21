@@ -15,15 +15,7 @@ export function ProjectAndTargetsList() {
         <Project label="compendium" />
       </div>
 
-      <hr
-        // I hate Infima so much
-        style={{
-          margin: 0,
-          marginBlock: '4px',
-          marginInline: '8px',
-          backgroundColor: 'var(--color-appkit-divider-minor-value)',
-        }}
-      />
+      <hr className="m-2 border-appkit-divider-minor" />
 
       <div className="flex flex-col gap-y-3 px-4 pb-4">
         <div className="text:[#272727] m-0 text-xs font-bold uppercase dark:text-[#DEDEDE]">

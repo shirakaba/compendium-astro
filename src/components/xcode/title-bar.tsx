@@ -111,16 +111,16 @@ export function TargetBar({ state }: { state: 'running' | 'built' }) {
             height="16"
             className="scale mr-1 shrink-0"
           />
-          <span className="min-w-0 overflow-hidden overflow-ellipsis">
+          <span className="min-w-0 overflow-hidden overflow-ellipsis mr-1">
             compendium
           </span>
           <div className="block size-[1em] shrink-0">
-            <strong className="block size-full pl-1 group-hover:hidden">
+            <strong className="block size-full pl-1 group-hover:hidden text-xcode-outer-button dark:text-[#D8D8D5]">
               〉
             </strong>
             <Icon
               SVG={ExpandMore}
-              className="hidden size-full group-hover:block dark:text-white [&_svg]:scale-150"
+              className="hidden size-full group-hover:block dark:text-[#D8D8D5] [&_svg]:scale-150"
             />
           </div>
         </div>
@@ -138,7 +138,7 @@ export function TargetBar({ state }: { state: 'running' | 'built' }) {
           </span>
           <Icon
             SVG={ExpandMore}
-            className="size-[1em] shrink-0 dark:text-white [&_svg]:scale-150"
+            className="size-[1em] invisible group-hover:visible shrink-0 dark:text-[#D8D8D5] [&_svg]:scale-150"
           />
         </div>
         <span className="shrink-0 grow text-right">
