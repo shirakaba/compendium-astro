@@ -101,9 +101,7 @@ export function SettingsSplitView({
         onResizeFinish={onResizeFinish}
         disabled={projectAndTargetsListVisibility === 'hidden'}
       />
-      <div>
-        <SettingsDetailView />
-      </div>
+      <SettingsDetailView />
     </div>
   );
 }
@@ -174,7 +172,7 @@ function DragHandle({
       {/* The hitbox. */}
       <div className="absolute -inset-x-2 h-full"></div>
       {/* The visual line. */}
-      <div className="bg-appkit-divider-supermajor absolute h-full w-px"></div>
+      <div className="absolute h-full w-px bg-appkit-divider-supermajor"></div>
     </div>
   );
 }
