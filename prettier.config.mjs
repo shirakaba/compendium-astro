@@ -12,7 +12,7 @@ const config = {
   ],
   pluginSearchDirs: false,
   singleQuote: true,
-  tailwindFunctions: ['classes'],
+  tailwindFunctions: ['cva', 'twMerge'],
   tailwindStylesheet: 'src/styles/global.css',
   trailingComma: 'es5',
 };

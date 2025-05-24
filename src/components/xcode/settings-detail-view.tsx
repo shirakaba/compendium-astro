@@ -1,23 +1,55 @@
 import Add from '@material-design-icons/svg/round/add.svg?react';
 import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg?react';
 import { useState } from 'react';
+import { TextField, Input, Form, Label } from 'react-aria-components';
+import { twMerge } from 'tailwind-merge';
+import { match } from 'ts-pattern';
 
 import { Icon } from './icon-button';
 
 export function SettingsDetailView() {
-  const [phases, setPhases] = useState<
-    Array<{ title: string; isOpen?: boolean }>
-  >([
-    { title: 'Target Dependencies (0 items)' },
-    { title: 'Run Build Tool Plug-ins (0 items)' },
-    { title: '[CP] Check Pods Manifest.lock' },
-    { title: '[Expo] Configure project' },
-    { title: 'Compile Sources (4 items)' },
-    { title: 'Link Binary With Libraries (1 item)' },
-    { title: 'Copy Bundle Resources (5 items)' },
-    { title: 'Bundle React Native code and images' },
-    { title: '[CP] Copy Pods Resources' },
-    { title: '[CP] Embed Pods Frameworks' },
+  const [phases, setPhases] = useState<Array<BuildPhaseState>>([
+    {
+      title: 'Target Dependencies (0 items)',
+      contents: { type: 'Target Dependencies' },
+    },
+    {
+      title: 'Run Build Tool Plug-ins (0 items)',
+      contents: { type: 'Target Dependencies' },
+    },
+    {
+      title: '[CP] Check Pods Manifest.lock',
+      contents: { type: 'Target Dependencies' },
+    },
+    {
+      title: '[Expo] Configure project',
+      contents: { type: 'Target Dependencies' },
+    },
+    {
+      title: 'Compile Sources (4 items)',
+      contents: { type: 'Target Dependencies' },
+    },
+    {
+      title: 'Link Binary With Libraries (1 item)',
+      contents: { type: 'Target Dependencies' },
+    },
+    {
+      title: 'Copy Bundle Resources (5 items)',
+      contents: { type: 'Target Dependencies' },
+    },
+    {
+      title: 'Bundle React Native code and images',
+      isOpen: true,
+      contents: { type: 'Run Script', shell: '/bin/sh' },
+    },
+    {
+      title: '[CP] Copy Pods Resources',
+      contents: { type: 'Target Dependencies' },
+    },
+    {
+      title: '[CP] Embed Pods Frameworks',
+      contents: { type: 'Target Dependencies' },
+    },
   ]);
 
   return (
@@ -26,47 +58,55 @@ export function SettingsDetailView() {
         <Icon SVG={Add} className="size-5" />
       </div>
       <div className="flex flex-col px-5">
-        {phases.map(({ title, isOpen }, i) => (
-          <BuildPhase
-            key={i}
-            isOpen={isOpen}
-            title={title}
-            onClickHeader={() =>
-              setPhases((phases) =>
-                phases.map((phase, j) => ({
-                  ...phase,
-                  isOpen: j === i ? !phase.isOpen : phase.isOpen,
-                }))
-              )
-            }
-          />
-        ))}
+        {phases.map((phase, i) => {
+          return (
+            <BuildPhase
+              key={i}
+              phase={phase}
+              setPhase={(action) =>
+                setPhases((phases) =>
+                  phases.map((phase, j) =>
+                    j === i
+                      ? typeof action === 'function'
+                        ? action(phase)
+                        : action
+                      : phase
+                  )
+                )
+              }
+            />
+          );
+        })}
       </div>
     </div>
   );
 }
 
-function BuildPhase({ isOpen, onClickHeader, title }: BuildPhaseProps) {
+function BuildPhase({ phase, setPhase }: BuildPhaseProps) {
   return (
-    <>
-      <BuildPhaseHeader isOpen={isOpen} title={title} onClick={onClickHeader} />
-      {isOpen && <BuildPhaseBody />}
-    </>
+    <div className="border border-transparent border-b-appkit-divider-minor">
+      <BuildPhaseHeader phase={phase} setPhase={setPhase} />
+      {phase.isOpen && <BuildPhaseBody phase={phase} setPhase={setPhase} />}
+    </div>
   );
 }
 
-interface BuildPhaseProps
-  extends Omit<BuildPhaseHeaderProps, 'onClick'>,
-    BuildPhaseBodyProps {
-  onClickHeader?: BuildPhaseHeaderProps['onClick'];
-}
+interface BuildPhaseProps extends BuildPhaseHeaderProps, BuildPhaseBodyProps {}
 
-function BuildPhaseHeader({ isOpen, title, onClick }: BuildPhaseHeaderProps) {
+function BuildPhaseHeader({
+  phase: { isOpen, title },
+  setPhase,
+}: BuildPhaseHeaderProps) {
   return (
     <div
       {...(isOpen ? { 'data-open': '' } : {})}
-      className="group flex h-10 items-center gap-x-2 border border-transparent border-b-appkit-divider-minor"
-      onClick={onClick}
+      className="group flex h-10 items-center gap-x-2"
+      onClick={() =>
+        setPhase((phase) => ({
+          ...phase,
+          isOpen: !phase.isOpen,
+        }))
+      }
     >
       <Icon
         SVG={ArrowForwardIos}
@@ -82,20 +122,144 @@ function BuildPhaseHeader({ isOpen, title, onClick }: BuildPhaseHeaderProps) {
   );
 }
 
-interface BuildPhaseHeaderProps extends Pick<BuildPhaseInfo, 'title'> {
+interface BuildPhaseHeaderProps {
+  phase: BuildPhaseState;
+  setPhase: React.Dispatch<React.SetStateAction<BuildPhaseState>>;
+}
+
+interface BuildPhaseState extends BuildPhaseInfo {
   isOpen?: boolean;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
-function BuildPhaseBody() {
-  return <div>Hi</div>;
+function BuildPhaseBody({
+  phase: { contents },
+  setPhase,
+}: BuildPhaseBodyProps) {
+  return (
+    <div className="pt-1 pb-3 pl-25">
+      {match(contents)
+        .with(
+          { type: 'Run Script' },
+          ({
+            type,
+            shell,
+            shellScript,
+            // runScriptForInstallBuildsOnly,
+            // runScriptBasedOnDependencyAnalysis,
+            // showEnvVarsInBuildLog,
+            // useDiscoveredDepFile,
+            // inputFiles,
+            // inputFileLists,
+            // outputFiles,
+            // outputFileLists,
+          }) => (
+            <Form className="flex flex-col gap-y-2 text-[10px] leading-none">
+              <TextField
+                type="text"
+                className="flex flex-1 items-center gap-x-2"
+              >
+                <Label>Shell</Label>
+                <Input
+                  className={twMerge(
+                    'flex-1 px-1.5 py-1',
+                    styles.inputField,
+                    styles.inputFieldFocusRing
+                  )}
+                  onChange={({ target: { value } }) => {
+                    setPhase((phase) => ({
+                      ...phase,
+                      contents: match(phase.contents)
+                        .with({ type }, (contents) => ({
+                          ...contents,
+                          shell: value,
+                        }))
+                        .otherwise((contents) => contents),
+                    }));
+                  }}
+                  value={shell ?? ''}
+                />
+              </TextField>
+              <TextField
+                type="text"
+                className="flex flex-1 items-center gap-x-2"
+              >
+                <Label className="hidden">Script</Label>
+                <Input
+                  className={twMerge(
+                    'flex-1 px-1.5 py-1',
+                    styles.multiLineInputField,
+                    styles.inputFieldFocusRing
+                  )}
+                  onChange={({ target: { value } }) => {
+                    setPhase((phase) => ({
+                      ...phase,
+                      contents: match(phase.contents)
+                        .with({ type }, (contents) => ({
+                          ...contents,
+                          shellScript: value,
+                        }))
+                        .otherwise((contents) => contents),
+                    }));
+                  }}
+                  value={shellScript ?? ''}
+                />
+              </TextField>
+            </Form>
+          )
+        )
+        .otherwise(() => null)}
+    </div>
+  );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+const styles = {
+  inputField: twMerge(
+    'box-border border border-x-[#f5f5f5] border-t-[#f5f5f5] border-b-[#d1d1d1] p-0 text-[10px] dark:border-x-[#363533] dark:border-t-[#363533] dark:border-b-[#4d4d4b] dark:bg-[#2e2d2b] dark:text-white'
+  ),
+  multiLineInputField: twMerge(
+    'border border-transparent border-y-[#e6e6e6] border-r-[#e6e6e6] p-0 text-[10px] dark:border-y-[#393836] dark:border-r-[#393836] dark:bg-[#292a30] dark:text-white'
+  ),
+  inputFieldFocusRing: twMerge(
+    'outline-none focus:ring-3 focus:ring-[#95b3f6] dark:focus:ring-[#3a658c]'
+  ),
+};
+
 interface BuildPhaseBodyProps {
-  // TODO
+  phase: BuildPhaseState;
+  setPhase: React.Dispatch<React.SetStateAction<BuildPhaseState>>;
 }
 
 interface BuildPhaseInfo {
   title: string;
+  contents: BuildPhaseContents;
 }
+
+type BuildPhaseContents =
+  | {
+      type:
+        | 'Target Dependencies'
+        | 'Run Build Tool Plug-ins'
+        | 'Copy Bundle Resources';
+      items?: Array<string>;
+    }
+  | {
+      type: 'Compile Sources';
+      items?: Array<{ name: string; compilerFlags?: string }>;
+    }
+  | {
+      type: 'Link Binary With Libraries';
+      items?: Array<{ name: string; required?: boolean }>;
+    }
+  | {
+      type: 'Run Script';
+      shell?: string;
+      shellScript?: string;
+      runScriptForInstallBuildsOnly?: boolean;
+      runScriptBasedOnDependencyAnalysis?: boolean;
+      showEnvVarsInBuildLog?: boolean;
+      useDiscoveredDepFile?: string;
+      inputFiles?: Array<string>;
+      inputFileLists?: Array<string>;
+      outputFiles?: Array<string>;
+      outputFileLists?: Array<string>;
+    };
