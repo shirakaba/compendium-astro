@@ -52,11 +52,17 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
   --color-xcode-outer-button-value: #777776;
   --color-xcode-inner-button-value: #818181;
   --color-xcode-accordion-arrow-value: #c5c5c5;
+  --color-xcode-accordion-arrow-active-value: var(
+    --color-xcode-accordion-arrow-value
+  );
   --color-xcode-selected-tab-value: #d6e6fd;
 }
 [data-disabled],
 :disabled {
   --color-xcode-inner-button-value: #c4c4c4;
+}
+:active {
+  --color-xcode-accordion-arrow-active-value: #7f7f7f;
 }
 
 [data-theme='dark'] {
@@ -82,6 +88,9 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
 [data-theme='dark'] :disabled,
 [data-theme='dark'] [data-disabled] {
   --color-xcode-inner-button-value: #545351;
+}
+[data-theme='dark'] :active {
+  --color-xcode-accordion-arrow-active-value: #e6e6e6;
 }
 
 /*
@@ -123,6 +132,9 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
   --color-xcode-outer-button: var(--color-xcode-outer-button-value);
   --color-xcode-inner-button: var(--color-xcode-inner-button-value);
   --color-xcode-accordion-arrow: var(--color-xcode-accordion-arrow-value);
+  --color-xcode-accordion-arrow-active: var(
+    --color-xcode-accordion-arrow-active-value
+  );
   --color-xcode-selected-tab: var(--color-xcode-selected-tab-value);
 }
 

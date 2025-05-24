@@ -36,7 +36,7 @@ function BuildPhase({
     <div className="flex h-10 items-center gap-x-2 border border-transparent border-b-appkit-divider-minor">
       <Icon
         SVG={ArrowForwardIos}
-        className="size-2.5 text-xcode-accordion-arrow active:text-[#7f7f7f] dark:active:text-[#e6e6e6]"
+        className="size-2.5 text-xcode-accordion-arrow active:text-xcode-accordion-arrow-active"
       />
       {/*
         Problem: Now that we've removed Tailwind Preflight for the sake of
