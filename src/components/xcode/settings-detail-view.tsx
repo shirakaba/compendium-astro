@@ -21,8 +21,8 @@ export function SettingsDetailView() {
   ]);
 
   return (
-    <div className="flex w-full flex-col">
-      <div className="flex h-7.5 items-center border border-transparent border-b-appkit-divider-minor px-[5px]">
+    <div className="flex w-full flex-col overflow-y-auto">
+      <div className="flex h-7.5 shrink-0 items-center border border-transparent border-b-appkit-divider-minor px-[5px]">
         <Icon SVG={Add} className="size-5" />
       </div>
       <div className="flex flex-col px-5">

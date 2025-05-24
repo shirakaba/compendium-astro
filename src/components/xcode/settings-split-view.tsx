@@ -83,7 +83,7 @@ export function SettingsSplitView({
         ref={sidebarRef}
         // This transition kills the performance of the drag handle, so we
         // remove it when drags begin and restore it when drags end.
-        className="ml-(--ml) w-(--width) max-w-[calc(100%-80px)] min-w-[170px] transition-[margin-left_2s]"
+        className="ml-(--ml) w-(--width) max-w-[calc(100%-80px)] min-w-[170px] overflow-y-auto transition-[margin-left_2s]"
         style={{
           ['--width' as string]: '170px',
           // FIXME: margin-left isn't working as expected when --width < 170px.

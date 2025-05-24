@@ -21,19 +21,19 @@ export function XcodeWindow({
     <div
       {...props}
       className={twMerge(
-        'pl-appkit-window-shadow-left pr-appkit-window-shadow-right pt-appkit-window-shadow-top pb-appkit-window-shadow-bottom',
+        'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left',
         className
       )}
     >
-      <div className="bg-appkit-title-bar shadow-appkit-window relative flex h-40 min-h-[360px] resize flex-col overflow-hidden rounded-lg text-sm text-black dark:text-white">
+      <div className="relative flex h-40 min-h-[360px] resize flex-col overflow-hidden rounded-lg bg-appkit-title-bar text-sm text-black shadow-appkit-window dark:text-white">
         <TitleBar />
-        <div className="bg-appkit-content-view flex">
+        <div className="flex bg-appkit-content-view">
           <TabBar />
         </div>
-        <div className="bg-xcode-content-view flex">
+        <div className="flex bg-xcode-content-view">
           <ProjectSelectionBar />
         </div>
-        <div className="bg-xcode-content-view flex">
+        <div className="flex bg-xcode-content-view">
           <XcodeprojNavigationBar
             onToggleProjectAndTargetsListVisibility={() => {
               setProjectAndTargetsListVisibility((visibility) =>
@@ -43,13 +43,13 @@ export function XcodeWindow({
           />
         </div>
 
-        <div className="bg-xcode-content-view flex grow">
+        <div className="flex grow overflow-hidden bg-xcode-content-view">
           <SettingsSplitView
             projectAndTargetsListVisibility={projectAndTargetsListVisibility}
           />
         </div>
 
-        <div className="bg-xcode-content-view border-appkit-divider-major flex h-7 self-stretch border-t">
+        <div className="box-border flex h-7 shrink-0 self-stretch border-t border-appkit-divider-major bg-xcode-content-view">
           {/* TODO: footer */}
         </div>
       </div>
