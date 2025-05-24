@@ -58,6 +58,9 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
 :disabled {
   --color-xcode-inner-button-value: #c4c4c4;
 }
+.pseudo:active {
+  --color-xcode-accordion-arrow-value: #7f7f7f;
+}
 
 [data-theme='dark'] {
   --appkit-window-shadow-value:
@@ -82,6 +85,9 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
 [data-theme='dark'] :disabled,
 [data-theme='dark'] [data-disabled] {
   --color-xcode-inner-button-value: #545351;
+}
+[data-theme='dark'] .pseudo:active {
+  --color-xcode-accordion-arrow-value: #e6e6e6;
 }
 
 /*
