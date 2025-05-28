@@ -3,6 +3,7 @@
 /* https://starlight.astro.build/guides/css-and-tailwind/#tailwind-css */
 @import '@astrojs/starlight-tailwind';
 @import 'tailwindcss/theme.css' layer(theme);
+@import './preflight.css' layer(utilities);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
 @plugin "../plugins/withHairlineBorder.js";

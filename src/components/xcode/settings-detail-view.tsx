@@ -131,11 +131,6 @@ function BuildPhaseHeader({
         SVG={ArrowForwardIos}
         className="size-2.5 text-xcode-accordion-arrow group-data-open:rotate-90 active:text-xcode-accordion-arrow-active"
       />
-      {/*
-        Problem: Now that we've removed Tailwind Preflight for the sake of
-        Astro, this has user agent styles to fight against. Maybe we could
-        fork Preflight and select on .not-content.
-      */}
       <h1 className="cursor-default text-xs select-none">{`${title}${suffix}`}</h1>
     </div>
   );

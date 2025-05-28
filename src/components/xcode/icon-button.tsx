@@ -21,7 +21,7 @@ export function IconButton({
 const iconButtonVariants = cva('', {
   variants: {
     hoverable: {
-      true: 'p-1 rounded-md hover:bg-xcode-hoverable-button-bg',
+      true: 'rounded-md p-1 hover:bg-xcode-hoverable-button-bg',
       false: '',
     },
   },
@@ -34,14 +34,24 @@ const iconButtonVariants = cva('', {
 
 export function Icon({ SVG, className, ...props }: IconProps) {
   return (
+    // TODO: Can we get away without a <div> here? Is it still needed for
+    // IconButton's use-case of a rounded hit box on hover, or was it only ever
+    // needed for fighting Docusaurus global styles?
     <div
       {...props}
       className={twMerge(
-        'text-xcode-outer-button box-content inline size-[1em] leading-0',
+        'box-content inline size-[1em] leading-0 text-xcode-outer-button',
         className
       )}
     >
-      <SVG className="m-0 inline size-[inherit] fill-current p-0" />
+      {/*
+        We apply display:inherit so that users can toggle the SVG between block
+        and inline layout simply by setting the class of the outer div. It may
+        not be great for different display types like flex and grid.
+
+        If we can remove the outer <div>, we can remove this style inheritance.
+      */}
+      <SVG className="m-0 [display:inherit] size-[inherit] fill-current p-0" />
     </div>
   );
 }
