@@ -1,22 +1,16 @@
 @layer base, starlight, theme, components, utilities;
 
-/* https://starlight.astro.build/guides/css-and-tailwind/#tailwind-css */
+/*
+https://starlight.astro.build/guides/css-and-tailwind/#tailwind-css
+https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
+*/
 @import '@astrojs/starlight-tailwind';
 @import 'tailwindcss/theme.css' layer(theme);
 @import './preflight.css' layer(utilities);
 @import 'tailwindcss/utilities.css' layer(utilities);
+@import './xcode.css';
 
 @plugin "../plugins/withHairlineBorder.js";
-
-/*
-By default, tailwindcss includes a CSS reset which wreaks havoc on Astro's
-styles. We can opt out of the CSS reset by swapping `@import "tailwindcss"` for:
-
-@tailwind components;
-@tailwind utilities;
-
-https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
-*/
 
 /* https://tailwindcss.com/docs/dark-mode#using-a-data-attribute */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
@@ -27,125 +21,15 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
  */
 :root {
   font-size: 16px;
-
-  --appkit-window-shadow-offset-x: 0px;
-  --appkit-window-shadow-offset-y: 20px;
-  --appkit-window-shadow-blur-radius: 40px;
-  --appkit-window-shadow-spread-radius: 0px;
-  --appkit-window-shadow-total-radius: calc(
-    var(--appkit-window-shadow-blur-radius) +
-      var(--appkit-window-shadow-spread-radius)
-  );
-  --appkit-window-shadow-value:
-    0 0 1px 0px rgba(0, 0, 0, 0.5),
-    var(--appkit-window-shadow-offset-x) var(--appkit-window-shadow-offset-y)
-      var(--appkit-window-shadow-blur-radius)
-      var(--appkit-window-shadow-spread-radius) rgba(0, 0, 0, 0.5);
-
-  --color-appkit-divider-supermajor-value: #c0c0c0;
-  --color-appkit-divider-major-value: #e8e8e8;
-  --color-appkit-divider-minor-value: var(--color-appkit-divider-major-value);
-  --color-appkit-title-bar-value: #ececea;
-  --color-xcode-title-bar-value: #f6f6f5;
-  --color-appkit-content-view-value: #f3f3f3;
-  --color-xcode-content-view-value: white;
-  --color-xcode-hoverable-button-bg-value: rgba(0, 0, 0, 0.05);
-  --color-xcode-outer-button-value: #777776;
-  --color-xcode-inner-button-value: #818181;
-  --color-xcode-accordion-arrow-value: #c5c5c5;
-  --color-xcode-accordion-arrow-active-value: var(
-    --color-xcode-accordion-arrow-value
-  );
-  --color-xcode-selected-tab-value: #d6e6fd;
-}
-[data-disabled],
-:disabled {
-  --color-xcode-inner-button-value: #c4c4c4;
-}
-:active {
-  --color-xcode-accordion-arrow-active-value: #7f7f7f;
 }
 
 [data-theme='dark'] {
-  --appkit-window-shadow-value:
-    0 0 2px 0px rgba(255, 255, 255, 1),
-    var(--appkit-window-shadow-offset-x) var(--appkit-window-shadow-offset-y)
-      var(--appkit-window-shadow-blur-radius)
-      var(--appkit-window-shadow-spread-radius) rgba(0, 0, 0, 0.5);
-
-  --color-appkit-divider-supermajor-value: #050505;
-  --color-appkit-divider-major-value: #050505;
-  --color-appkit-divider-minor-value: #383735;
-  --color-appkit-title-bar-value: #292826;
-  --color-xcode-title-bar-value: #393938;
-  --color-appkit-content-view-value: #363637;
-  --color-xcode-content-view-value: #242423;
-  --color-xcode-hoverable-button-bg-value: rgba(255, 255, 255, 0.05);
-  --color-xcode-outer-button-value: #b9b9b9;
-  --color-xcode-inner-button-value: #999997;
-  --color-xcode-accordion-arrow-value: #808080;
-  --color-xcode-selected-tab-value: #3a5171;
-}
-[data-theme='dark'] :disabled,
-[data-theme='dark'] [data-disabled] {
-  --color-xcode-inner-button-value: #545351;
-}
-[data-theme='dark'] :active {
-  --color-xcode-accordion-arrow-active-value: #e6e6e6;
-}
-
-/*
- * When referencing other variables, use `@theme inline`:
- * https://tailwindcss.com/docs/theme#referencing-other-variables
- * https://github.com/tailwindlabs/tailwindcss/pull/14095
- */
-@theme inline {
-  --shadow-appkit-window: var(--appkit-window-shadow-value);
-  --spacing-appkit-window-shadow-left: calc(
-    var(--appkit-window-shadow-total-radius) -
-      var(--appkit-window-shadow-offset-x)
-  );
-  --spacing-appkit-window-shadow-right: calc(
-    var(--appkit-window-shadow-total-radius) +
-      var(--appkit-window-shadow-offset-x)
-  );
-  --spacing-appkit-window-shadow-top: calc(
-    var(--appkit-window-shadow-total-radius) -
-      var(--appkit-window-shadow-offset-y)
-  );
-  --spacing-appkit-window-shadow-bottom: calc(
-    var(--appkit-window-shadow-total-radius) +
-      var(--appkit-window-shadow-offset-y)
-  );
-
-  --color-appkit-divider-supermajor: var(
-    --color-appkit-divider-supermajor-value
-  );
-  --color-appkit-divider-major: var(--color-appkit-divider-major-value);
-  --color-appkit-divider-minor: var(--color-appkit-divider-minor-value);
-  --color-appkit-title-bar: var(--color-appkit-title-bar-value);
-  --color-xcode-title-bar: var(--color-xcode-title-bar-value);
-  --color-appkit-content-view: var(--color-appkit-content-view-value);
-  --color-xcode-content-view: var(--color-xcode-content-view-value);
-  --color-xcode-hoverable-button-bg: var(
-    --color-xcode-hoverable-button-bg-value
-  );
-  --color-xcode-outer-button: var(--color-xcode-outer-button-value);
-  --color-xcode-inner-button: var(--color-xcode-inner-button-value);
-  --color-xcode-accordion-arrow: var(--color-xcode-accordion-arrow-value);
-  --color-xcode-accordion-arrow-active: var(
-    --color-xcode-accordion-arrow-active-value
-  );
-  --color-xcode-selected-tab: var(--color-xcode-selected-tab-value);
+  /* Just to shut up the linter */
+  --permit-empty-ruleset: 0;
 }
 
 /* Tailwind v4 config goes in here! https://tailwindcss.com/docs/theme */
 @theme {
   /* Just to shut up the linter */
   --permit-empty-ruleset: 0;
-}
-
-[data-theme='light'] img[src$='#gh-dark-mode-only'],
-[data-theme='dark'] img[src$='#gh-light-mode-only'] {
-  display: none;
 }

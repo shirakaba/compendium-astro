@@ -1,1 +1,12 @@
-@import './styles/global.css';
+@layer base, theme, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(utilities);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import './styles/xcode.css';
+
+@plugin "./plugins/withHairlineBorder.js";
+
+:root {
+  font-size: 16px;
+}
