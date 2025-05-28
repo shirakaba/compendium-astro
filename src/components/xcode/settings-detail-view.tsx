@@ -10,32 +10,44 @@ import { Icon } from './icon-button';
 export function SettingsDetailView() {
   const [phases, setPhases] = useState<Array<BuildPhaseState>>([
     {
-      title: 'Target Dependencies (0 items)',
-      contents: { type: 'Target Dependencies' },
+      title: 'Target Dependencies',
+      contents: { type: 'Target Dependencies', items: [] },
     },
     {
-      title: 'Run Build Tool Plug-ins (0 items)',
-      contents: { type: 'Target Dependencies' },
+      title: 'Run Build Tool Plug-ins',
+      contents: { type: 'Target Dependencies', items: [] },
     },
     {
       title: '[CP] Check Pods Manifest.lock',
-      contents: { type: 'Target Dependencies' },
+      contents: { type: 'Target Dependencies', items: [] },
     },
     {
       title: '[Expo] Configure project',
-      contents: { type: 'Target Dependencies' },
+      contents: { type: 'Target Dependencies', items: [] },
     },
     {
-      title: 'Compile Sources (4 items)',
-      contents: { type: 'Target Dependencies' },
+      title: 'Compile Sources',
+      contents: {
+        type: 'Target Dependencies',
+        items: ['placeholder1', 'placeholder2', 'placeholder3', 'placeholder4'],
+      },
     },
     {
-      title: 'Link Binary With Libraries (1 item)',
-      contents: { type: 'Target Dependencies' },
+      title: 'Link Binary With Libraries',
+      contents: { type: 'Target Dependencies', items: ['placeholder1'] },
     },
     {
-      title: 'Copy Bundle Resources (5 items)',
-      contents: { type: 'Target Dependencies' },
+      title: 'Copy Bundle Resources',
+      contents: {
+        type: 'Target Dependencies',
+        items: [
+          'placeholder1',
+          'placeholder2',
+          'placeholder3',
+          'placeholder4',
+          'placeholder5',
+        ],
+      },
     },
     {
       title: 'Bundle React Native code and images',
@@ -44,11 +56,11 @@ export function SettingsDetailView() {
     },
     {
       title: '[CP] Copy Pods Resources',
-      contents: { type: 'Target Dependencies' },
+      contents: { type: 'Target Dependencies', items: [] },
     },
     {
       title: '[CP] Embed Pods Frameworks',
-      contents: { type: 'Target Dependencies' },
+      contents: { type: 'Target Dependencies', items: [] },
     },
   ]);
 
@@ -94,9 +106,16 @@ function BuildPhase({ phase, setPhase }: BuildPhaseProps) {
 interface BuildPhaseProps extends BuildPhaseHeaderProps, BuildPhaseBodyProps {}
 
 function BuildPhaseHeader({
-  phase: { isOpen, title },
+  phase: { isOpen, title, contents },
   setPhase,
 }: BuildPhaseHeaderProps) {
+  const itemsLength = ('items' in contents ? contents.items : undefined)
+    ?.length;
+  const suffix =
+    typeof itemsLength === 'number'
+      ? ` (${itemsLength} ${itemsLength ? 'items' : 'item'})`
+      : '';
+
   return (
     <div
       {...(isOpen ? { 'data-open': '' } : {})}
@@ -117,7 +136,7 @@ function BuildPhaseHeader({
         Astro, this has user agent styles to fight against. Maybe we could
         fork Preflight and select on .not-content.
       */}
-      <h1 className="cursor-default text-xs select-none">{title}</h1>
+      <h1 className="cursor-default text-xs select-none">{`${title}${suffix}`}</h1>
     </div>
   );
 }
@@ -240,15 +259,15 @@ type BuildPhaseContents =
         | 'Target Dependencies'
         | 'Run Build Tool Plug-ins'
         | 'Copy Bundle Resources';
-      items?: Array<string>;
+      items: Array<string>;
     }
   | {
       type: 'Compile Sources';
-      items?: Array<{ name: string; compilerFlags?: string }>;
+      items: Array<{ name: string; compilerFlags?: string }>;
     }
   | {
       type: 'Link Binary With Libraries';
-      items?: Array<{ name: string; required?: boolean }>;
+      items: Array<{ name: string; required?: boolean }>;
     }
   | {
       type: 'Run Script';
