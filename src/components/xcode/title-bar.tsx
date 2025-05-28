@@ -1,12 +1,15 @@
 import Add from '@material-design-icons/svg/round/add.svg?react';
+import Close from '@material-design-icons/svg/round/close.svg?react';
 import ExpandMore from '@material-design-icons/svg/round/expand_more.svg?react';
 import PhoneIphone from '@material-design-icons/svg/round/phone_iphone.svg?react';
 import PlayArrow from '@material-design-icons/svg/round/play_arrow.svg?react';
+import Remove from '@material-design-icons/svg/round/remove.svg?react';
 import Stop from '@material-design-icons/svg/round/stop.svg?react';
 import Warning from '@material-design-icons/svg/round/warning.svg?react';
 import DockToLeft from '@material-symbols/svg-500/rounded/dock_to_left.svg?react';
 import DockToRight from '@material-symbols/svg-500/rounded/dock_to_right.svg?react';
 import Graph1 from '@material-symbols/svg-500/rounded/graph_1-fill.svg?react';
+import ExpandContent from '@material-symbols/svg-700/rounded/expand_content.svg?react';
 import { cva } from 'class-variance-authority';
 import { match } from 'ts-pattern';
 
@@ -18,7 +21,7 @@ export function TitleBar() {
     // We use two containers in order to stop content overflowing into the
     // padding box. We can simplify this to a single container with
     // `overflow: clip` once `overflow-clip-margin: content-box` is supported.
-    <div className="border-appkit-divider-major bg-xcode-title-bar min-h-[38px]border-b flex px-2.5 py-1.5">
+    <div className="min-h-[38px]border-b flex border-appkit-divider-major bg-xcode-title-bar px-2.5 py-1.5">
       <div className="flex grow items-center gap-x-[14px] overflow-hidden">
         <WindowControlButtonRow />
 
@@ -45,7 +48,11 @@ export function TitleBar() {
 
 export function WindowControlButtonRow() {
   return (
-    <div className="flex gap-2">
+    <div
+      className="group/row flex gap-2"
+      // TODO: Figure out why select-none is failing to abrogate selection here.
+      onMouseDown={(e) => e.preventDefault()}
+    >
       <WindowControlButton type="close" />
       <WindowControlButton type="minimize" />
       <WindowControlButton type="zoom" />
@@ -58,18 +65,36 @@ export function WindowControlButton({
 }: {
   type: 'close' | 'minimize' | 'zoom';
 }) {
-  return <div className={windowControlButtonVariants({ type })}></div>;
+  return (
+    <div className={windowControlButtonVariants({ type })}>
+      <div className="pointer-events-none absolute inset-0 group-active/button:bg-black/25 dark:group-active/button:bg-white/25"></div>
+      {match(type)
+        .with('close', () => (
+          <Close className="invisible fill-[#6D150B] group-hover/row:visible group-active/row:visible" />
+        ))
+        .with('minimize', () => (
+          <Remove className="invisible fill-[#A77324] group-hover/row:visible group-active/row:visible" />
+        ))
+        .with('zoom', () => (
+          <ExpandContent className="invisible fill-[#2A6013] group-hover/row:visible group-active/row:visible" />
+        ))
+        .exhaustive()}
+    </div>
+  );
 }
 
-const windowControlButtonVariants = cva('size-3 rounded-full', {
-  variants: {
-    type: {
-      close: 'bg-[#EC6B5D] hairline-border-inset-[#D45241]',
-      minimize: 'bg-[#F4B449] hairline-border-inset-[#DCA535]',
-      zoom: 'bg-[#64C54F] hairline-border-inset-[#52AC36]',
+const windowControlButtonVariants = cva(
+  'group/button relative size-3 overflow-hidden rounded-full p-px',
+  {
+    variants: {
+      type: {
+        close: 'bg-[#EC6B5D] hairline-border-inset-[#D45241]',
+        minimize: 'bg-[#F4B449] hairline-border-inset-[#DCA535]',
+        zoom: 'bg-[#64C54F] hairline-border-inset-[#52AC36]',
+      },
     },
-  },
-});
+  }
+);
 
 export function WorkingTree() {
   return (
@@ -111,11 +136,11 @@ export function TargetBar({ state }: { state: 'running' | 'built' }) {
             height="16"
             className="scale mr-1 shrink-0"
           />
-          <span className="min-w-0 overflow-hidden overflow-ellipsis mr-1">
+          <span className="mr-1 min-w-0 overflow-hidden overflow-ellipsis">
             compendium
           </span>
           <div className="block size-[1em] shrink-0">
-            <strong className="block size-full pl-1 group-hover:hidden text-xcode-outer-button dark:text-[#D8D8D5]">
+            <strong className="block size-full pl-1 text-xcode-outer-button group-hover:hidden dark:text-[#D8D8D5]">
               〉
             </strong>
             <Icon
@@ -138,7 +163,7 @@ export function TargetBar({ state }: { state: 'running' | 'built' }) {
           </span>
           <Icon
             SVG={ExpandMore}
-            className="size-[1em] invisible group-hover:visible shrink-0 dark:text-[#D8D8D5] [&_svg]:scale-150"
+            className="invisible size-[1em] shrink-0 group-hover:visible dark:text-[#D8D8D5] [&_svg]:scale-150"
           />
         </div>
         <span className="shrink-0 grow text-right">
