@@ -15,6 +15,7 @@ import { match } from 'ts-pattern';
 
 import AppIcon from './app-icon.png';
 import { Icon, IconButton } from './icon-button';
+import { SVG } from './svg';
 
 export function TitleBar() {
   return (
@@ -66,24 +67,21 @@ export function WindowControlButton({
   type: 'close' | 'minimize' | 'zoom';
 }) {
   return (
-    <div className={windowControlButtonVariants({ type })}>
+    <div className={windowControlButtonContainerVariants({ type })}>
       <div className="pointer-events-none absolute inset-0 group-active/button:bg-black/25 dark:group-active/button:bg-white/25"></div>
-      {match(type)
-        .with('close', () => (
-          <Close className="invisible fill-[#6D150B] group-hover/row:visible group-active/row:visible" />
-        ))
-        .with('minimize', () => (
-          <Remove className="invisible fill-[#A77324] group-hover/row:visible group-active/row:visible" />
-        ))
-        .with('zoom', () => (
-          <ExpandContent className="invisible fill-[#2A6013] group-hover/row:visible group-active/row:visible" />
-        ))
-        .exhaustive()}
+      <SVG
+        svg={match(type)
+          .with('close', () => Close)
+          .with('minimize', () => Remove)
+          .with('zoom', () => ExpandContent)
+          .exhaustive()}
+        className={windowControlButtonVariants({ type })}
+      />
     </div>
   );
 }
 
-const windowControlButtonVariants = cva(
+const windowControlButtonContainerVariants = cva(
   'group/button relative size-3 overflow-hidden rounded-full p-px',
   {
     variants: {
@@ -91,6 +89,19 @@ const windowControlButtonVariants = cva(
         close: 'bg-[#EC6B5D] hairline-border-inset-[#D45241]',
         minimize: 'bg-[#F4B449] hairline-border-inset-[#DCA535]',
         zoom: 'bg-[#64C54F] hairline-border-inset-[#52AC36]',
+      },
+    },
+  }
+);
+
+const windowControlButtonVariants = cva(
+  'invisible group-hover/row:visible group-active/row:visible',
+  {
+    variants: {
+      type: {
+        close: 'fill-[#6D150B]',
+        minimize: 'fill-[#A77324]',
+        zoom: 'fill-[#2A6013]',
       },
     },
   }
