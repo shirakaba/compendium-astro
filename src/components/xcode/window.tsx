@@ -72,6 +72,15 @@ function XcodeWindowInner({
               return;
             }
 
+            const inFlowResizer =
+              inFlow.querySelector<HTMLDivElement>('.resize');
+            const popoverResizer =
+              popover.querySelector<HTMLDivElement>('.resize');
+
+            if (!inFlowResizer || !popoverResizer) {
+              return;
+            }
+
             // Get the initial dimensions so that we can animate with
             // `@starting-style`.
             const { width, height, top, left } = inFlow.getBoundingClientRect();
@@ -79,12 +88,18 @@ function XcodeWindowInner({
             // The popover handles the close, while the in-flow component
             // handles the open.
             if (isPopover) {
+              inFlowResizer.style.width = popoverResizer.style.width;
+              inFlowResizer.style.height = popoverResizer.style.height;
+
               popover.style.setProperty('--ending-top', `${top}px`);
               popover.style.setProperty('--ending-left', `${left}px`);
               popover.style.setProperty('--ending-width', `${width}px`);
               popover.style.setProperty('--ending-height', `${height}px`);
               popover.hidePopover();
             } else {
+              popoverResizer.style.width = inFlowResizer.style.width;
+              popoverResizer.style.height = inFlowResizer.style.height;
+
               popover.style.setProperty('--starting-top', `${top}px`);
               popover.style.setProperty('--starting-left', `${left}px`);
               popover.style.setProperty('--starting-width', `${width}px`);
