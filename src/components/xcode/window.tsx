@@ -11,21 +11,32 @@ export function XcodeWindow({
   className,
   ...props
 }: React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLDivElement>,
-  HTMLDivElement
+  React.HTMLAttributes<HTMLDialogElement>,
+  HTMLDialogElement
 >) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDialogElement>(null);
   const [projectAndTargetsListVisibility, setProjectAndTargetsListVisibility] =
     useState<'visible' | 'hidden'>('visible');
 
   return (
-    <div
+    <dialog
       ref={ref}
       {...props}
       // TODO: would be nice to animate the full-screen backdrop
       // illuminating/dimming independently of the Xcode window
       className={twMerge(
-        'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left transition-all transition-discrete duration-500 open:size-full starting:open:top-(--starting-top) starting:open:left-(--starting-left) starting:open:h-(--starting-height) starting:open:w-(--starting-width)',
+        // Appearance.
+        'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left',
+
+        // Animation.
+        'transition-all transition-discrete duration-500',
+
+        // Overriding <dialog> user agent styles to make it start as visible.
+        'relative block size-auto',
+
+        // Open/close styling.
+        'open:size-full starting:open:top-(--starting-top) starting:open:left-(--starting-left) starting:open:h-(--starting-height) starting:open:w-(--starting-width)',
+
         className
       )}
     >
@@ -37,38 +48,8 @@ export function XcodeWindow({
               return;
             }
 
-            if (div.popover) {
-              // Removing the 'popover' attribute triggers a janky transition.
-              // I've not found any way around it. Here are the styles the
-              // browser applies (the CSS is inspectable in Chrome).
-              //
-              // STAGE 1 (first half of transition)
-              // transitions style {
-              //   position: fixed;
-              //   top: 0;
-              //   bottom: 0;
-              //   height: 100%;
-              //   width: 100%;
-              // }
-              //
-              // STAGE 2 (second half of transition)
-              // transitions style {
-              //   position: static;
-              //   top: auto;
-              //   width: auto;
-              //   height: auto;
-              //   bottom: auto;
-              // }
-              //
-              // STAGE 3
-              // Initial styles.
-
-              // The best we can do for now is just opt out of the transition.
-              div.style.transitionDuration = '0s';
-              div.popover = null;
-              requestAnimationFrame(() => {
-                div.style.transitionDuration = '';
-              });
+            if (div.open) {
+              div.close();
             } else {
               // Get the initial dimensions so that we can animate with
               // `@starting-style`.
@@ -78,20 +59,15 @@ export function XcodeWindow({
               div.style.setProperty('--starting-width', `${width}px`);
               div.style.setProperty('--starting-height', `${height}px`);
 
-              // Adding `popover` sets the computed display to `none`.
-              div.popover = 'manual';
-
-              // Unfortunately, all browsers fail to animate the transition
-              // unless given a frame resting in `display: none`.
+              // <dialog> only seems to animate the properties when animating
+              // from `display: none`, so we reset it back to its user agent
+              // styles for one frame.
               div.style.transitionDuration = '0s';
+              div.classList.remove('block', 'relative', 'size-auto');
               requestAnimationFrame(() => {
                 div.style.transitionDuration = '';
-                div.togglePopover();
+                div.showModal();
               });
-
-              // On Safari, the popover fails to lay out properly before 18.4.
-              // https://webkit.org/blog/16574/webkit-features-in-safari-18-4/
-              // https://github.com/WebKit/WebKit/commit/4b91c7fe1375dbfc4af6c5d8e3ebe23d6589f895
             }
           }}
         />
@@ -121,6 +97,6 @@ export function XcodeWindow({
           {/* TODO: footer */}
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }
