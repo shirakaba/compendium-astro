@@ -8,12 +8,25 @@ import { TitleBar } from './title-bar';
 import { XcodeprojNavigationBar } from './xcodeproj-navigation-bar';
 
 export function XcodeWindow({
-  className,
+  withoutPopover,
   ...props
-}: React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLDivElement>,
-  HTMLDivElement
->) {
+}: { withoutPopover?: boolean } & Omit<XcodeWindowInnerProps, 'isPopover'>) {
+  return (
+    <>
+      {/* This one reserves space in the DOM tree. */}
+      <XcodeWindowInner {...props} isPopover={false} />
+
+      {/* This one is the popover. */}
+      {!withoutPopover && <XcodeWindowInner {...props} isPopover={true} />}
+    </>
+  );
+}
+
+function XcodeWindowInner({
+  className,
+  isPopover,
+  ...props
+}: XcodeWindowInnerProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [projectAndTargetsListVisibility, setProjectAndTargetsListVisibility] =
     useState<'visible' | 'hidden'>('visible');
@@ -22,72 +35,51 @@ export function XcodeWindow({
     <div
       ref={ref}
       {...props}
+      popover={isPopover ? 'manual' : undefined}
       // TODO: would be nice to animate the full-screen backdrop
       // illuminating/dimming independently of the Xcode window
       className={twMerge(
-        'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left transition-all transition-discrete duration-500 open:size-full starting:open:top-(--starting-top) starting:open:left-(--starting-left) starting:open:h-(--starting-height) starting:open:w-(--starting-width)',
+        // Appearance
+        'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left',
+
+        // Animation
+        'transition-all transition-discrete duration-500',
+
+        // Popover
+        'open:size-full starting:open:top-(--starting-top) starting:open:left-(--starting-left) starting:open:h-(--starting-height) starting:open:w-(--starting-width)',
         className
       )}
     >
       <div className="relative flex h-40 min-h-[360px] resize flex-col overflow-hidden rounded-lg bg-appkit-title-bar text-sm text-black shadow-appkit-window dark:text-white">
         <TitleBar
           onZoom={() => {
-            const div = ref.current;
-            if (!div) {
+            const popover = isPopover
+              ? ref.current
+              : ref.current?.nextElementSibling;
+            if (!(popover instanceof HTMLDivElement)) {
               return;
             }
 
-            if (div.popover) {
-              // Removing the 'popover' attribute triggers a janky transition.
-              // I've not found any way around it. Here are the styles the
-              // browser applies (the CSS is inspectable in Chrome).
-              //
-              // STAGE 1 (first half of transition)
-              // transitions style {
-              //   position: fixed;
-              //   top: 0;
-              //   bottom: 0;
-              //   height: 100%;
-              //   width: 100%;
-              // }
-              //
-              // STAGE 2 (second half of transition)
-              // transitions style {
-              //   position: static;
-              //   top: auto;
-              //   width: auto;
-              //   height: auto;
-              //   bottom: auto;
-              // }
-              //
-              // STAGE 3
-              // Initial styles.
+            const inFlow = popover.previousElementSibling;
+            if (!(inFlow instanceof HTMLDivElement)) {
+              return;
+            }
 
-              // The best we can do for now is just opt out of the transition.
-              div.style.transitionDuration = '0s';
-              div.popover = null;
-              requestAnimationFrame(() => {
-                div.style.transitionDuration = '';
-              });
+            // The popover handles the close, while the in-flow component
+            // handles the open.
+            if (isPopover) {
+              popover.hidePopover();
             } else {
               // Get the initial dimensions so that we can animate with
               // `@starting-style`.
-              const { width, height, top, left } = div.getBoundingClientRect();
-              div.style.setProperty('--starting-top', `${top}px`);
-              div.style.setProperty('--starting-left', `${left}px`);
-              div.style.setProperty('--starting-width', `${width}px`);
-              div.style.setProperty('--starting-height', `${height}px`);
+              const { width, height, top, left } =
+                inFlow.getBoundingClientRect();
 
-              // Adding `popover` sets the computed display to `none`.
-              div.popover = 'manual';
-
-              // Unfortunately, all browsers fail to animate the transition
-              // unless given a frame resting in `display: none`.
-              div.style.transitionDuration = '0s';
-              requestAnimationFrame(() => {
-                div.style.transitionDuration = '';
-                div.togglePopover();
-              });
+              popover.style.setProperty('--starting-top', `${top}px`);
+              popover.style.setProperty('--starting-left', `${left}px`);
+              popover.style.setProperty('--starting-width', `${width}px`);
+              popover.style.setProperty('--starting-height', `${height}px`);
+              popover.showPopover();
 
               // On Safari, the popover fails to lay out properly before 18.4.
               // https://webkit.org/blog/16574/webkit-features-in-safari-18-4/
@@ -124,3 +116,10 @@ export function XcodeWindow({
     </div>
   );
 }
+
+type XcodeWindowInnerProps = React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
+> & {
+  isPopover: boolean;
+};
