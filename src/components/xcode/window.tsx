@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { ProjectSelectionBar } from './project-selection-bar';
@@ -14,19 +14,58 @@ export function XcodeWindow({
   React.HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
 >) {
+  const ref = useRef<HTMLDivElement>(null);
   const [projectAndTargetsListVisibility, setProjectAndTargetsListVisibility] =
     useState<'visible' | 'hidden'>('visible');
 
   return (
     <div
+      ref={ref}
       {...props}
+      // TODO: would be nice to animate the full-screen backdrop
+      // illuminating/dimming independently of the Xcode window
       className={twMerge(
-        'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left',
+        'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left transition-all transition-discrete duration-500 open:size-full starting:open:top-(--starting-top) starting:open:left-(--starting-left) starting:open:h-(--starting-height) starting:open:w-(--starting-width)',
         className
       )}
     >
       <div className="relative flex h-40 min-h-[360px] resize flex-col overflow-hidden rounded-lg bg-appkit-title-bar text-sm text-black shadow-appkit-window dark:text-white">
-        <TitleBar />
+        <TitleBar
+          onZoom={() => {
+            const div = ref.current;
+            if (!div) {
+              return;
+            }
+
+            if (div.popover) {
+              div.popover = null;
+              // TODO: transition back to non-popover over the course of 500ms.
+            } else {
+              // Get the initial dimensions so that we can animate with
+              // `@starting-style`.
+              const { width, height, top, left } = div.getBoundingClientRect();
+              div.style.setProperty('--starting-top', `${top}px`);
+              div.style.setProperty('--starting-left', `${left}px`);
+              div.style.setProperty('--starting-width', `${width}px`);
+              div.style.setProperty('--starting-height', `${height}px`);
+
+              // Adding `popover` sets the computed display to `none`.
+              div.popover = 'manual';
+
+              // Unfortunately, all browsers fail to animate the transition
+              // unless given a frame resting in `display: none`.
+              div.style.transitionDuration = '0s';
+              requestAnimationFrame(() => {
+                div.style.transitionDuration = '';
+                div.togglePopover();
+              });
+
+              // On Safari, the popover fails to lay out properly before 18.4.
+              // https://webkit.org/blog/16574/webkit-features-in-safari-18-4/
+              // https://github.com/WebKit/WebKit/commit/4b91c7fe1375dbfc4af6c5d8e3ebe23d6589f895
+            }
+          }}
+        />
         <div className="flex bg-appkit-content-view">
           <TabBar />
         </div>
