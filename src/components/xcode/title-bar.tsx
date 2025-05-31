@@ -17,14 +17,26 @@ import AppIcon from './app-icon.png';
 import { Icon, IconButton } from './icon-button';
 import { SVG } from './svg';
 
-export function TitleBar() {
+export function TitleBar({
+  onClose,
+  onMinimize,
+  onZoom,
+}: {
+  onClose?: () => void;
+  onMinimize?: () => void;
+  onZoom?: () => void;
+}) {
   return (
     // We use two containers in order to stop content overflowing into the
     // padding box. We can simplify this to a single container with
     // `overflow: clip` once `overflow-clip-margin: content-box` is supported.
     <div className="min-h-[38px]border-b flex border-appkit-divider-major bg-xcode-title-bar px-2.5 py-1.5">
       <div className="flex grow items-center gap-x-[14px] overflow-hidden">
-        <WindowControlButtonRow />
+        <WindowControlButtonRow
+          onClose={onClose}
+          onMinimize={onMinimize}
+          onZoom={onZoom}
+        />
 
         <IconButton SVG={DockToRight} className="size-5" />
         <IconButton SVG={Stop} className="invisible size-5" />
@@ -47,27 +59,40 @@ export function TitleBar() {
   );
 }
 
-export function WindowControlButtonRow() {
+export function WindowControlButtonRow({
+  onClose,
+  onMinimize,
+  onZoom,
+}: {
+  onClose?: () => void;
+  onMinimize?: () => void;
+  onZoom?: () => void;
+}) {
   return (
     <div
       className="group/row flex gap-2"
       // TODO: Figure out why select-none is failing to abrogate selection here.
       onMouseDown={(e) => e.preventDefault()}
     >
-      <WindowControlButton type="close" />
-      <WindowControlButton type="minimize" />
-      <WindowControlButton type="zoom" />
+      <WindowControlButton type="close" onClick={() => onClose?.()} />
+      <WindowControlButton type="minimize" onClick={() => onMinimize?.()} />
+      <WindowControlButton type="zoom" onClick={() => onZoom?.()} />
     </div>
   );
 }
 
 export function WindowControlButton({
   type,
+  onClick,
 }: {
   type: 'close' | 'minimize' | 'zoom';
+  onClick?: () => void;
 }) {
   return (
-    <div className={windowControlButtonContainerVariants({ type })}>
+    <div
+      className={windowControlButtonContainerVariants({ type })}
+      onClick={onClick}
+    >
       <div className="pointer-events-none absolute inset-0 group-active/button:bg-black/25 dark:group-active/button:bg-white/25"></div>
       <SVG
         svg={match(type)
