@@ -9,16 +9,19 @@ import { XcodeprojNavigationBar } from './xcodeproj-navigation-bar';
 
 export function XcodeWindow({
   withoutPopover,
+  className,
   ...props
 }: { withoutPopover?: boolean } & Omit<XcodeWindowInnerProps, 'isPopover'>) {
   return (
-    <>
+    // I introduced this container <div> just to handle Astro's `.not-content`
+    // failing to match on the popover (for reasons I can't explain).
+    <div className={className}>
       {/* This one reserves space in the DOM tree. */}
       <XcodeWindowInner {...props} isPopover={false} />
 
       {/* This one is the popover. */}
       {!withoutPopover && <XcodeWindowInner {...props} isPopover={true} />}
-    </>
+    </div>
   );
 }
 
@@ -45,8 +48,12 @@ function XcodeWindowInner({
         // Animation
         'transition-all transition-discrete duration-500',
 
-        // Popover
+        // Popover open
         'open:size-full starting:open:top-(--starting-top) starting:open:left-(--starting-left) starting:open:h-(--starting-height) starting:open:w-(--starting-width)',
+
+        // Popover closed
+        isPopover &&
+          'top-(--ending-top) left-(--ending-left) h-(--ending-height) w-(--ending-width)',
         className
       )}
     >
@@ -65,20 +72,27 @@ function XcodeWindowInner({
               return;
             }
 
+            // Get the initial dimensions so that we can animate with
+            // `@starting-style`.
+            const { width, height, top, left } = inFlow.getBoundingClientRect();
+
             // The popover handles the close, while the in-flow component
             // handles the open.
             if (isPopover) {
+              popover.style.setProperty('--ending-top', `${top}px`);
+              popover.style.setProperty('--ending-left', `${left}px`);
+              popover.style.setProperty('--ending-width', `${width}px`);
+              popover.style.setProperty('--ending-height', `${height}px`);
               popover.hidePopover();
             } else {
-              // Get the initial dimensions so that we can animate with
-              // `@starting-style`.
-              const { width, height, top, left } =
-                inFlow.getBoundingClientRect();
-
               popover.style.setProperty('--starting-top', `${top}px`);
               popover.style.setProperty('--starting-left', `${left}px`);
               popover.style.setProperty('--starting-width', `${width}px`);
               popover.style.setProperty('--starting-height', `${height}px`);
+              popover.style.setProperty('--ending-top', '0px');
+              popover.style.setProperty('--ending-left', '0px');
+              popover.style.setProperty('--ending-width', '100%');
+              popover.style.setProperty('--ending-height', '100%');
               popover.showPopover();
 
               // On Safari, the popover fails to lay out properly before 18.4.
