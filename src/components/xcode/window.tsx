@@ -38,8 +38,37 @@ export function XcodeWindow({
             }
 
             if (div.popover) {
+              // Removing the 'popover' attribute triggers a janky transition.
+              // I've not found any way around it. Here are the styles the
+              // browser applies (the CSS is inspectable in Chrome).
+              //
+              // STAGE 1 (first half of transition)
+              // transitions style {
+              //   position: fixed;
+              //   top: 0;
+              //   bottom: 0;
+              //   height: 100%;
+              //   width: 100%;
+              // }
+              //
+              // STAGE 2 (second half of transition)
+              // transitions style {
+              //   position: static;
+              //   top: auto;
+              //   width: auto;
+              //   height: auto;
+              //   bottom: auto;
+              // }
+              //
+              // STAGE 3
+              // Initial styles.
+
+              // The best we can do for now is just opt out of the transition.
+              div.style.transitionDuration = '0s';
               div.popover = null;
-              // TODO: transition back to non-popover over the course of 500ms.
+              requestAnimationFrame(() => {
+                div.style.transitionDuration = '';
+              });
             } else {
               // Get the initial dimensions so that we can animate with
               // `@starting-style`.
