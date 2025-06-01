@@ -1,12 +1,4 @@
-/// <reference types="react/experimental" />
-
-import {
-  useRef,
-  useState,
-  unstable_ViewTransition as ViewTransition,
-  startTransition,
-} from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { ProjectSelectionBar } from './project-selection-bar';
@@ -22,44 +14,61 @@ export function XcodeWindow({
 }: { withoutPopover?: boolean } & Omit<XcodeWindowInnerProps, 'isPopover'>) {
   const [fullSize, setFullSize] = useState(false);
 
-  // const transitionName = 'xcode-window';
+  useEffect(() => {
+    const header = document.querySelector('header');
+    const sidebar = document.getElementById('starlight__sidebar');
+    const footer = document.querySelector('footer');
+    const menuButton = document.querySelector<HTMLElement>(
+      'starlight-menu-button'
+    );
+    if (!header || !sidebar || !footer || !menuButton) {
+      return;
+    }
+
+    header.style.transition = 'transform 500ms, opacity 500ms';
+    menuButton.style.transition = 'transform 500ms, opacity 500ms';
+    sidebar.style.transition = 'transform 500ms, opacity 500ms';
+    footer.style.transition = 'transform 500ms, opacity 500ms';
+
+    if (fullSize) {
+      header.style.transform = 'translateY(-100%)';
+      menuButton.style.transform = 'translateY(-100%)';
+      sidebar.style.transform = 'translateX(-100%)';
+      footer.style.transform = 'translateY(100%)';
+
+      header.style.opacity = '0';
+      menuButton.style.opacity = '0';
+      sidebar.style.opacity = '0';
+      footer.style.opacity = '0';
+    } else {
+      header.style.transform = '';
+      menuButton.style.transform = '';
+      sidebar.style.transform = '';
+      footer.style.transform = '';
+
+      header.style.opacity = '';
+      menuButton.style.opacity = '';
+      sidebar.style.opacity = '';
+      footer.style.opacity = '';
+    }
+  }, [fullSize]);
 
   return (
     // I introduced this container <div> just to handle Astro's `.not-content`
     // failing to match on the popover (for reasons I can't explain).
     <div className={className}>
-      {/* https://github.com/facebook/react/blob/ee76351917106c6146745432a52e9a54a41ee181/fixtures/view-transition/src/components/Page.js#L112 */}
-      {fullSize ? (
-        createPortal(
-          <ViewTransition
-          // default="enter-slide-right exit-slide-left"
-          // name={transitionName}
-          >
-            <XcodeWindowInner
-              {...props}
-              className="fixed inset-0 z-50"
-              onZoom={() => setFullSize((fullsize) => !fullsize)}
-            />
-          </ViewTransition>,
-          document.body
-        )
-      ) : (
-        <ViewTransition
-        // default="enter-slide-right exit-slide-left"
-        // name={transitionName}
-        >
-          <XcodeWindowInner
-            {...props}
-            onZoom={() => setFullSize((fullsize) => !fullsize)}
-          />
-        </ViewTransition>
-      )}
+      <XcodeWindowInner
+        {...props}
+        fullsize={fullSize}
+        onZoom={() => setFullSize((fullsize) => !fullsize)}
+      />
     </div>
   );
 }
 
 function XcodeWindowInner({
   className,
+  fullsize,
   onZoom,
   ...props
 }: XcodeWindowInnerProps) {
@@ -71,20 +80,19 @@ function XcodeWindowInner({
     <div
       ref={ref}
       {...props}
+      {...(fullsize ? { ['data-fullsize']: '' } : {})}
       // TODO: would be nice to animate the full-screen backdrop
       // illuminating/dimming independently of the Xcode window
       className={twMerge(
         'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left',
+        'transition-all transition-discrete duration-500 data-[fullsize]:fixed data-[fullsize]:inset-0 data-[fullsize]:size-full',
         className
       )}
     >
       <div className="relative flex h-40 min-h-[360px] resize flex-col overflow-hidden rounded-lg bg-appkit-title-bar text-sm text-black shadow-appkit-window dark:text-white">
         <TitleBar
           onZoom={() => {
-            startTransition(async () => {
-              await new Promise<void>((resolve) => setTimeout(resolve, 500));
-              onZoom?.();
-            });
+            onZoom?.();
           }}
         />
         <div className="flex bg-appkit-content-view">
@@ -121,5 +129,6 @@ type XcodeWindowInnerProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
 > & {
+  fullsize?: boolean;
   onZoom?: () => void;
 };
