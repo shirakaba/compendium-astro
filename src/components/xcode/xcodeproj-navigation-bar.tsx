@@ -13,7 +13,7 @@ export function XcodeprojNavigationBar({
     // We use two containers in order to stop content overflowing into the
     // padding box. We can simplify this to a single container with
     // `overflow: clip` once `overflow-clip-margin: content-box` is supported.
-    <div className="bg-xcode-content-view border-appkit-divider-minor flex grow overflow-hidden border-b px-1.5">
+    <div className="flex grow overflow-hidden border-b border-appkit-divider-minor bg-xcode-content-view px-1.5">
       <div className="flex h-7 grow items-center gap-x-2 overflow-hidden">
         <Icon
           SVG={DockToRight}
@@ -47,7 +47,7 @@ function Bean({
     <div
       {...(active ? { ['data-active']: '' } : {})}
       className={twMerge(
-        'group rounded-md px-2 py-0.5 font-medium text-nowrap text-[#373736] select-none hover:bg-[#F2F2F2] data-[active]:bg-[#D6E6FD] data-[active]:text-[#3979F9] dark:text-white dark:hover:bg-[#303131] dark:data-[active]:bg-[#3A5172] dark:data-[active]:text-white',
+        'group rounded-md px-2 py-0.5 font-medium text-nowrap text-[#373736] select-none hover:bg-[#F2F2F2] data-active:bg-[#D6E6FD] data-active:text-[#3979F9] dark:text-white dark:hover:bg-[#303131] dark:data-active:bg-[#3A5172] dark:data-active:text-white',
         className
       )}
     >
