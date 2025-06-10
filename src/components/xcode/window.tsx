@@ -9,7 +9,6 @@ import { XcodeprojNavigationBar } from './xcodeproj-navigation-bar';
 
 export function XcodeWindow({
   className,
-  fullsize,
   onZoom,
   ...props
 }: XcodeWindowInnerProps) {
@@ -21,7 +20,6 @@ export function XcodeWindow({
     <div
       ref={ref}
       {...props}
-      {...(fullsize ? { ['data-fullsize']: '' } : {})}
       // TODO: would be nice to animate the full-screen backdrop
       // illuminating/dimming independently of the Xcode window
       className={twMerge(
@@ -69,6 +67,5 @@ type XcodeWindowInnerProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
 > & {
-  fullsize?: boolean;
   onZoom?: () => void;
 };
