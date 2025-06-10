@@ -9,8 +9,11 @@ Xcode builds run sequentially, in **phases**. When creating a new Xcode project 
 
 When creating a project using a framework such as React Native, you may notice additional phases beyond the ones those built-in templates provide. These are the secret sauce behind how the framework builds and runs!
 
-import { XcodeWindow } from '../../../components/xcode/window';
+import { StarlightXcodeWindow } from '../../../components/starlight-xcode-window';
 
 <div class="px-[16px]">
-  <XcodeWindow client:only className="[&>div]:max-w-[942px] not-content" />
+  <StarlightXcodeWindow
+    client:only
+    className="not-content [&>div]:max-w-[942px]"
+  />
 </div>
