@@ -52,7 +52,7 @@ export function StarlightXcodeWindow({ className }: { className?: string }) {
       {...(fullSize ? { ['data-fullsize']: '' } : {})}
       className={twMerge(
         'transition-all transition-discrete duration-500 data-[fullsize]:fixed data-[fullsize]:inset-0 data-[fullsize]:size-full',
-        'starting:data-[fullsize]:top-(--starting-top) starting:data-[fullsize]:left-(--starting-left) starting:data-[fullsize]:h-(--starting-height) starting:data-[fullsize]:w-(--starting-width)',
+        'starting:data-[discrete]:top-(--starting-top) starting:data-[discrete]:left-(--starting-left) starting:data-[discrete]:h-(--starting-height) starting:data-[discrete]:w-(--starting-width)',
         className
       )}
       onZoom={() => {
@@ -71,6 +71,7 @@ export function StarlightXcodeWindow({ className }: { className?: string }) {
         div.style.setProperty('--starting-width', `${width}px`);
         div.style.setProperty('--starting-height', `${height}px`);
         div.style.display = 'none';
+        div.dataset.discrete = '';
 
         // Unfortunately, all browsers fail to animate the transition
         // unless given a frame resting in `display: none`.
@@ -78,6 +79,11 @@ export function StarlightXcodeWindow({ className }: { className?: string }) {
         requestAnimationFrame(() => {
           div.style.transitionDuration = '';
           div.style.display = '';
+
+          // TODO: listen to actual animation end
+          setTimeout(() => {
+            delete div.dataset.discrete;
+          }, 1000);
         });
       }}
     />
