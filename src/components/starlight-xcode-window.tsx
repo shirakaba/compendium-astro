@@ -49,9 +49,16 @@ export function StarlightXcodeWindow({ className }: { className?: string }) {
   return (
     <XcodeWindow
       ref={ref}
-      className={twMerge('transition-all duration-500', className)}
+      className={twMerge(
+        'transition-all duration-500 vt-name-[xcode-window]',
+        className
+      )}
       onZoom={() => {
         setFullSize((fullSize) => !fullSize);
+
+        if (!document.startViewTransition) {
+          return;
+        }
 
         document.startViewTransition(() => {
           const div = ref.current;

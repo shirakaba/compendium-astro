@@ -39,6 +39,7 @@
         "prettier-plugin-astro": "^0.14.1",
         "prettier-plugin-organize-attributes": "^1.0.0",
         "prettier-plugin-tailwindcss": "^0.6.11",
+        "tailwindcss-view-transitions": "^0.1.1",
         "typescript": "^5.8.3",
         "typescript-eslint": "^8.30.1",
         "vite-imagetools": "^7.1.0",
@@ -1774,6 +1775,8 @@
     "tailwind-merge": ["tailwind-merge@3.2.0", "", {}, "sha512-FQT/OVqCD+7edmmJpsgCsY820RTD5AkBryuG5IUqR5YQZSdj5xlH5nLgH7YPths7WsLPSpSBNneJdM8aS8aeFA=="],
 
     "tailwindcss": ["tailwindcss@4.1.4", "", {}, "sha512-1ZIUqtPITFbv/DxRmDr5/agPqJwF69d24m9qmM1939TJehgY539CtzeZRjbLt5G6fSy/7YqqYsfvoTEw9xUI2A=="],
+
+    "tailwindcss-view-transitions": ["tailwindcss-view-transitions@0.1.1", "", { "peerDependencies": { "tailwindcss": ">=3.0.0" } }, "sha512-YIiZAoYDSwcUC6kt/TD7knkOkiDyyQArUN3fgYAvrRIF7zzta7/olQM44z9zeuGRBMSWpkbP1slYH67gEMMIKA=="],
 
     "tapable": ["tapable@2.2.1", "", {}, "sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ=="],
 

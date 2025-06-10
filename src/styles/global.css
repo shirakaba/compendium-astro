@@ -11,6 +11,7 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
 @import './xcode.css';
 
 @plugin "../plugins/withHairlineBorder.js";
+@plugin "tailwindcss-view-transitions";
 
 /* https://tailwindcss.com/docs/dark-mode#using-a-data-attribute */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
@@ -32,4 +33,9 @@ https://github.com/withastro/astro/issues/10232#issuecomment-1964192508
 @theme {
   /* Just to shut up the linter */
   --permit-empty-ruleset: 0;
+}
+
+::view-transition-old(xcode-window),
+::view-transition-new(xcode-window) {
+  animation: fade-scale 0.5s ease;
 }
