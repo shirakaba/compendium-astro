@@ -49,35 +49,19 @@ export function StarlightXcodeWindow({ className }: { className?: string }) {
   return (
     <XcodeWindow
       ref={ref}
-      {...(fullSize ? { ['data-fullsize']: '' } : {})}
-      className={twMerge(
-        'transition-all transition-discrete duration-500 data-[fullsize]:fixed data-[fullsize]:inset-0 data-[fullsize]:size-full',
-        'starting:data-[fullsize]:top-(--starting-top) starting:data-[fullsize]:left-(--starting-left) starting:data-[fullsize]:h-(--starting-height) starting:data-[fullsize]:w-(--starting-width)',
-        className
-      )}
+      className={twMerge('transition-all duration-500', className)}
       onZoom={() => {
         setFullSize((fullSize) => !fullSize);
 
-        const div = ref.current;
-        if (!div) {
-          return;
-        }
+        document.startViewTransition(() => {
+          const div = ref.current;
+          if (!div) {
+            return;
+          }
 
-        // Get the initial dimensions so that we can animate with
-        // `@starting-style`.
-        const { width, height, top, left } = div.getBoundingClientRect();
-        div.style.setProperty('--starting-top', `${top}px`);
-        div.style.setProperty('--starting-left', `${left}px`);
-        div.style.setProperty('--starting-width', `${width}px`);
-        div.style.setProperty('--starting-height', `${height}px`);
-        div.style.display = 'none';
-
-        // Unfortunately, all browsers fail to animate the transition
-        // unless given a frame resting in `display: none`.
-        div.style.transitionDuration = '0s';
-        requestAnimationFrame(() => {
-          div.style.transitionDuration = '';
-          div.style.display = '';
+          div.classList.toggle('inset-0');
+          div.classList.toggle('size-full');
+          div.classList.toggle('fixed');
         });
       }}
     />
