@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { XcodeWindow } from './xcode/window';
 
 export function StarlightXcodeWindow({ className }: { className?: string }) {
   const [fullSize, setFullSize] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const header = document.querySelector('header');
@@ -47,39 +46,19 @@ export function StarlightXcodeWindow({ className }: { className?: string }) {
   }, [fullSize]);
 
   return (
-    <XcodeWindow
-      ref={ref}
+    <div
       {...(fullSize ? { ['data-fullsize']: '' } : {})}
-      className={twMerge(
-        'transition-all transition-discrete duration-500 data-[fullsize]:fixed data-[fullsize]:inset-0 data-[fullsize]:size-full',
-        'starting:data-[fullsize]:top-(--starting-top) starting:data-[fullsize]:left-(--starting-left) starting:data-[fullsize]:h-(--starting-height) starting:data-[fullsize]:w-(--starting-width)',
-        className
-      )}
-      onZoom={() => {
-        setFullSize((fullSize) => !fullSize);
-
-        const div = ref.current;
-        if (!div) {
-          return;
-        }
-
-        // Get the initial dimensions so that we can animate with
-        // `@starting-style`.
-        const { width, height, top, left } = div.getBoundingClientRect();
-        div.style.setProperty('--starting-top', `${top}px`);
-        div.style.setProperty('--starting-left', `${left}px`);
-        div.style.setProperty('--starting-width', `${width}px`);
-        div.style.setProperty('--starting-height', `${height}px`);
-        div.style.display = 'none';
-
-        // Unfortunately, all browsers fail to animate the transition
-        // unless given a frame resting in `display: none`.
-        div.style.transitionDuration = '0s';
-        requestAnimationFrame(() => {
-          div.style.transitionDuration = '';
-          div.style.display = '';
-        });
-      }}
-    />
+      className="group not-content relative size-full data-[fullsize]:contents"
+    >
+      <XcodeWindow
+        className={twMerge(
+          'absolute inset-0 size-full transition-all duration-500',
+          className
+        )}
+        onZoom={() => {
+          setFullSize((fullSize) => !fullSize);
+        }}
+      />
+    </div>
   );
 }
