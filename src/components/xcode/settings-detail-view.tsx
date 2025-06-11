@@ -1,7 +1,9 @@
 import Add from '@material-design-icons/svg/round/add.svg?react';
 import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg?react';
-import { useState } from 'react';
-import { TextField, Input, Form, Label } from 'react-aria-components';
+import { useEffect, useState } from 'react';
+import { TextField, Input, Form, Label, TextArea } from 'react-aria-components';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
 import { twMerge } from 'tailwind-merge';
 import { match } from 'ts-pattern';
 
@@ -149,6 +151,10 @@ function BuildPhaseBody({
   phase: { contents },
   setPhase,
 }: BuildPhaseBodyProps) {
+  useEffect(() => {
+    SyntaxHighlighter.registerLanguage('bash', bash);
+  }, []);
+
   return (
     <div className="pt-1 pb-3 pl-25">
       {match(contents)
@@ -198,25 +204,41 @@ function BuildPhaseBody({
                 className="flex flex-1 items-center gap-x-2"
               >
                 <Label className="hidden">Script</Label>
-                <Input
-                  className={twMerge(
-                    'flex-1 px-1.5 py-1',
-                    styles.multiLineInputField,
-                    styles.inputFieldFocusRing
-                  )}
-                  onChange={({ target: { value } }) => {
-                    setPhase((phase) => ({
-                      ...phase,
-                      contents: match(phase.contents)
-                        .with({ type }, (contents) => ({
-                          ...contents,
-                          shellScript: value,
-                        }))
-                        .otherwise((contents) => contents),
-                    }));
-                  }}
-                  value={shellScript ?? ''}
-                />
+                <div className="relative flex w-full">
+                  <TextArea
+                    className={twMerge(
+                      'resize-none text-transparent caret-black dark:caret-white',
+                      'absolute inset-0',
+                      'flex-1 px-1.5 py-1',
+                      styles.multiLineInputField,
+                      styles.inputFieldFocusRing
+                    )}
+                    onChange={({ target: { value } }) => {
+                      setPhase((phase) => ({
+                        ...phase,
+                        contents: match(phase.contents)
+                          .with({ type }, (contents) => ({
+                            ...contents,
+                            shellScript: value,
+                          }))
+                          .otherwise((contents) => contents),
+                      }));
+                    }}
+                    value={shellScript ?? ''}
+                  />
+                  <SyntaxHighlighter
+                    wrapLines={true}
+                    wrapLongLines={true}
+                    className={twMerge(
+                      'flex-1 resize overflow-hidden px-1.5 py-1',
+                      styles.multiLineInputField,
+                      styles.inputFieldFocusRing
+                    )}
+                    language="bash"
+                  >
+                    {shellScript ?? ''}
+                  </SyntaxHighlighter>
+                </div>
               </TextField>
             </Form>
           )
@@ -231,7 +253,7 @@ const styles = {
     'box-border border border-x-[#f5f5f5] border-t-[#f5f5f5] border-b-[#d1d1d1] p-0 text-[10px] dark:border-x-[#363533] dark:border-t-[#363533] dark:border-b-[#4d4d4b] dark:bg-[#2e2d2b] dark:text-white'
   ),
   multiLineInputField: twMerge(
-    'border border-transparent border-y-[#e6e6e6] border-r-[#e6e6e6] p-0 text-[10px] dark:border-y-[#393836] dark:border-r-[#393836] dark:bg-[#292a30] dark:text-white'
+    'min-h-12.5 border border-transparent border-y-[#e6e6e6] border-r-[#e6e6e6] p-0 font-mono text-[10px] dark:border-y-[#393836] dark:border-r-[#393836] dark:bg-[#292a30] dark:text-white'
   ),
   inputFieldFocusRing: twMerge(
     'outline-none focus:ring-3 focus:ring-[#95b3f6] dark:focus:ring-[#3a658c]'
