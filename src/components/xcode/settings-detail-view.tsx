@@ -1,6 +1,8 @@
 import Add from '@material-design-icons/svg/round/add.svg?react';
 import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg?react';
-import { useState } from 'react';
+import hljs from 'highlight.js/lib/core';
+import bash from 'highlight.js/lib/languages/bash';
+import { useEffect, useState } from 'react';
 import { TextField, Input, Form, Label } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { match } from 'ts-pattern';
@@ -149,6 +151,10 @@ function BuildPhaseBody({
   phase: { contents },
   setPhase,
 }: BuildPhaseBodyProps) {
+  useEffect(() => {
+    hljs.registerLanguage('bash', bash);
+  }, []);
+
   return (
     <div className="pt-1 pb-3 pl-25">
       {match(contents)
@@ -195,28 +201,20 @@ function BuildPhaseBody({
               </TextField>
               <TextField
                 type="text"
-                className="flex flex-1 items-center gap-x-2"
+                className="flex w-full flex-1 items-center gap-x-2"
               >
                 <Label className="hidden">Script</Label>
-                <Input
+                <pre
                   className={twMerge(
-                    'flex-1 px-1.5 py-1',
+                    'w-full flex-1',
                     styles.multiLineInputField,
                     styles.inputFieldFocusRing
                   )}
-                  onChange={({ target: { value } }) => {
-                    setPhase((phase) => ({
-                      ...phase,
-                      contents: match(phase.contents)
-                        .with({ type }, (contents) => ({
-                          ...contents,
-                          shellScript: value,
-                        }))
-                        .otherwise((contents) => contents),
-                    }));
-                  }}
-                  value={shellScript ?? ''}
-                />
+                >
+                  <code className={twMerge('language-bash')}>
+                    {shellScript ?? 'ABC=123\nnode ./some-file/x.js --help'}
+                  </code>
+                </pre>
               </TextField>
             </Form>
           )
@@ -231,7 +229,7 @@ const styles = {
     'box-border border border-x-[#f5f5f5] border-t-[#f5f5f5] border-b-[#d1d1d1] p-0 text-[10px] dark:border-x-[#363533] dark:border-t-[#363533] dark:border-b-[#4d4d4b] dark:bg-[#2e2d2b] dark:text-white'
   ),
   multiLineInputField: twMerge(
-    'border border-transparent border-y-[#e6e6e6] border-r-[#e6e6e6] p-0 text-[10px] dark:border-y-[#393836] dark:border-r-[#393836] dark:bg-[#292a30] dark:text-white'
+    'min-h-12.5 border border-transparent border-y-[#e6e6e6] border-r-[#e6e6e6] p-0 text-[10px] dark:border-y-[#393836] dark:border-r-[#393836] dark:bg-[#292a30] dark:text-white'
   ),
   inputFieldFocusRing: twMerge(
     'outline-none focus:ring-3 focus:ring-[#95b3f6] dark:focus:ring-[#3a658c]'
