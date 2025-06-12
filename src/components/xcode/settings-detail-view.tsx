@@ -1,7 +1,7 @@
 import Add from '@material-design-icons/svg/round/add.svg?react';
 import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg?react';
 import { useState } from 'react';
-import { TextField, Input, Form, Label } from 'react-aria-components';
+import { TextField, Input, Form, Label, TextArea } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { match } from 'ts-pattern';
 
@@ -198,9 +198,9 @@ function BuildPhaseBody({
                 className="flex flex-1 items-center gap-x-2"
               >
                 <Label className="hidden">Script</Label>
-                <Input
+                <TextArea
                   className={twMerge(
-                    'flex-1 px-1.5 py-1',
+                    'flex-1 px-1.5 py-1 font-mono',
                     styles.multiLineInputField,
                     styles.inputFieldFocusRing
                   )}
