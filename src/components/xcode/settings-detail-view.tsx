@@ -11,11 +11,21 @@ import {
 
 import { Icon } from './icon-button';
 
-export function SettingsDetailView({ phasesSetter }: SettingsDetailViewProps) {
+export function SettingsDetailView({
+  phasesSetter,
+  className,
+  ...props
+}: SettingsDetailViewProps) {
   const [phases, setPhases] = useOptionallyManagedState(phasesSetter);
 
   return (
-    <div className="flex w-full flex-col overflow-y-auto overscroll-contain">
+    <div
+      {...props}
+      className={twMerge(
+        'flex w-full flex-col overflow-y-auto overscroll-contain',
+        className
+      )}
+    >
       <div className="flex h-7.5 shrink-0 items-center border border-transparent border-b-appkit-divider-minor px-[5px]">
         <Icon SVG={Add} className="size-5" />
       </div>
@@ -44,7 +54,11 @@ export function SettingsDetailView({ phasesSetter }: SettingsDetailViewProps) {
   );
 }
 
-export interface SettingsDetailViewProps {
+export interface SettingsDetailViewProps
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {
   phasesSetter: UseStateReturnWithoutSetter<Array<BuildPhaseState>>;
 }
 

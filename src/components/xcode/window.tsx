@@ -19,13 +19,7 @@ export function XcodeWindow({
     useState<'visible' | 'hidden'>('visible');
 
   return (
-    <div
-      {...props}
-      className={twMerge(
-        'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left',
-        className
-      )}
-    >
+    <WindowShadowPadding {...props} className={className}>
       <div className="relative flex h-40 min-h-[360px] resize flex-col overflow-hidden rounded-lg bg-appkit-title-bar text-sm text-black shadow-appkit-window dark:text-white">
         <TitleBar />
         <div className="flex bg-appkit-content-view">
@@ -55,6 +49,27 @@ export function XcodeWindow({
           {/* TODO: footer */}
         </div>
       </div>
+    </WindowShadowPadding>
+  );
+}
+
+export function WindowShadowPadding({
+  children,
+  className,
+  ...props
+}: React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
+>) {
+  return (
+    <div
+      {...props}
+      className={twMerge(
+        'pt-appkit-window-shadow-top pr-appkit-window-shadow-right pb-appkit-window-shadow-bottom pl-appkit-window-shadow-left',
+        className
+      )}
+    >
+      {children}
     </div>
   );
 }

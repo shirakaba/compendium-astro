@@ -5,25 +5,26 @@ sidebar:
   label: Xcode build phases
 ---
 
-import { XcodeWindow } from '../../../components/xcode/window';
+import {
+  XcodeWindow,
+  WindowShadowPadding,
+} from '../../../components/xcode/window';
+import { SettingsDetailView } from '../../../components/xcode/settings-detail-view';
 import { phasesIosApp, phasesExpoApp } from './phases';
 
-Xcode builds run sequentially, in **phases**. When creating an Xcode project, depending on the type (e.g. app, static library, framework), you'll find different build phases get set up for you in advance.
+Xcode builds run sequentially, in **phases**. When creating an Xcode project, depending on the type (e.g. app, static library, framework), you'll find different build phases to have been set up for you in advance.
 
-<div class="px-[16px]">
-  <XcodeWindow
-    client:only
-    className="not-content [&>div]:max-w-[942px]"
-    phasesSetter={[phasesIosApp]}
-  />
-</div>
+<XcodeWindow
+  client:only
+  className="not-content my-4 [&>div]:max-w-[942px]"
+  phasesSetter={[phasesIosApp]}
+/>
 
-When creating a project using a framework such as React Native, you may notice additional phases beyond the ones those built-in templates provide. These are the secret sauce behind how the framework builds and runs!
+Frameworks like React Native include various additional build phases in their apps.
 
-<div class="px-[16px]">
-  <XcodeWindow
-    client:only
-    className="not-content [&>div]:max-w-[942px]"
+<WindowShadowPadding client:only className="not-content my-4">
+  <SettingsDetailView
+    className="rounded-lg bg-xcode-content-view shadow-appkit-window"
     phasesSetter={[phasesExpoApp]}
   />
-</div>
+</WindowShadowPadding>
