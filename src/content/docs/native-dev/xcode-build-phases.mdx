@@ -5,12 +5,25 @@ sidebar:
   label: Xcode build phases
 ---
 
-Xcode builds run sequentially, in **phases**. When creating a new Xcode project following one of the built-in templates (e.g. app, framework, static library, etc.), you'll find a few of these phases to have been prepopulated (e.g. "Compile Sources" and "Copy Bundle Resources").
+import { XcodeWindow } from '../../../components/xcode/window';
+import { phasesIosApp, phasesExpoApp } from './phases';
+
+Xcode builds run sequentially, in **phases**. When creating an Xcode project, depending on the type (e.g. app, static library, framework), you'll find different build phases get set up for you in advance.
+
+<div class="px-[16px]">
+  <XcodeWindow
+    client:only
+    className="not-content [&>div]:max-w-[942px]"
+    phasesSetter={[phasesIosApp]}
+  />
+</div>
 
 When creating a project using a framework such as React Native, you may notice additional phases beyond the ones those built-in templates provide. These are the secret sauce behind how the framework builds and runs!
 
-import { XcodeWindow } from '../../../components/xcode/window';
-
 <div class="px-[16px]">
-  <XcodeWindow client:only className="[&>div]:max-w-[942px] not-content" />
+  <XcodeWindow
+    client:only
+    className="not-content [&>div]:max-w-[942px]"
+    phasesSetter={[phasesExpoApp]}
+  />
 </div>

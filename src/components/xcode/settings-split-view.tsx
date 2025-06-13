@@ -1,13 +1,15 @@
 import { useCallback, useRef } from 'react';
 
-import { SettingsDetailView } from './settings-detail-view';
+import {
+  SettingsDetailView,
+  type SettingsDetailViewProps,
+} from './settings-detail-view';
 import { ProjectAndTargetsList } from './settings-project-and-targets-list';
 
 export function SettingsSplitView({
   projectAndTargetsListVisibility,
-}: {
-  projectAndTargetsListVisibility: 'visible' | 'hidden';
-}) {
+  phasesSetter,
+}: SettingsSplitViewProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const resizeStateRef = useRef<
     | { type: 'idle' }
@@ -101,9 +103,13 @@ export function SettingsSplitView({
         onResizeFinish={onResizeFinish}
         disabled={projectAndTargetsListVisibility === 'hidden'}
       />
-      <SettingsDetailView />
+      <SettingsDetailView phasesSetter={phasesSetter} />
     </div>
   );
+}
+
+export interface SettingsSplitViewProps extends SettingsDetailViewProps {
+  projectAndTargetsListVisibility: 'visible' | 'hidden';
 }
 
 function DragHandle({

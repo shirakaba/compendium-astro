@@ -2,18 +2,19 @@ import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { ProjectSelectionBar } from './project-selection-bar';
-import { SettingsSplitView } from './settings-split-view';
+import {
+  SettingsSplitView,
+  type SettingsSplitViewProps,
+} from './settings-split-view';
 import { TabBar } from './tab-bar';
 import { TitleBar } from './title-bar';
 import { XcodeprojNavigationBar } from './xcodeproj-navigation-bar';
 
 export function XcodeWindow({
   className,
+  phasesSetter,
   ...props
-}: React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLDivElement>,
-  HTMLDivElement
->) {
+}: XcodeWindowProps) {
   const [projectAndTargetsListVisibility, setProjectAndTargetsListVisibility] =
     useState<'visible' | 'hidden'>('visible');
 
@@ -46,6 +47,7 @@ export function XcodeWindow({
         <div className="flex grow overflow-hidden bg-xcode-content-view">
           <SettingsSplitView
             projectAndTargetsListVisibility={projectAndTargetsListVisibility}
+            phasesSetter={phasesSetter}
           />
         </div>
 
@@ -56,3 +58,10 @@ export function XcodeWindow({
     </div>
   );
 }
+
+export interface XcodeWindowProps
+  extends SettingsSplitViewProps,
+    React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLDivElement>,
+      HTMLDivElement
+    > {}

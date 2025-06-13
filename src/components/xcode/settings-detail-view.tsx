@@ -1,68 +1,18 @@
 import Add from '@material-design-icons/svg/round/add.svg?react';
 import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg?react';
-import { useState } from 'react';
 import { TextField, Input, Form, Label, TextArea } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { match } from 'ts-pattern';
 
+import {
+  useOptionallyManagedState,
+  type UseStateReturnWithoutSetter,
+} from '../../utils/use-optionally-managed-state';
+
 import { Icon } from './icon-button';
 
-export function SettingsDetailView() {
-  const [phases, setPhases] = useState<Array<BuildPhaseState>>([
-    {
-      title: 'Target Dependencies',
-      contents: { type: 'Target Dependencies', items: [] },
-    },
-    {
-      title: 'Run Build Tool Plug-ins',
-      contents: { type: 'Target Dependencies', items: [] },
-    },
-    {
-      title: '[CP] Check Pods Manifest.lock',
-      contents: { type: 'Target Dependencies', items: [] },
-    },
-    {
-      title: '[Expo] Configure project',
-      contents: { type: 'Target Dependencies', items: [] },
-    },
-    {
-      title: 'Compile Sources',
-      contents: {
-        type: 'Target Dependencies',
-        items: ['placeholder1', 'placeholder2', 'placeholder3', 'placeholder4'],
-      },
-    },
-    {
-      title: 'Link Binary With Libraries',
-      contents: { type: 'Target Dependencies', items: ['placeholder1'] },
-    },
-    {
-      title: 'Copy Bundle Resources',
-      contents: {
-        type: 'Target Dependencies',
-        items: [
-          'placeholder1',
-          'placeholder2',
-          'placeholder3',
-          'placeholder4',
-          'placeholder5',
-        ],
-      },
-    },
-    {
-      title: 'Bundle React Native code and images',
-      isOpen: true,
-      contents: { type: 'Run Script', shell: '/bin/sh' },
-    },
-    {
-      title: '[CP] Copy Pods Resources',
-      contents: { type: 'Target Dependencies', items: [] },
-    },
-    {
-      title: '[CP] Embed Pods Frameworks',
-      contents: { type: 'Target Dependencies', items: [] },
-    },
-  ]);
+export function SettingsDetailView({ phasesSetter }: SettingsDetailViewProps) {
+  const [phases, setPhases] = useOptionallyManagedState(phasesSetter);
 
   return (
     <div className="flex w-full flex-col overflow-y-auto">
@@ -92,6 +42,10 @@ export function SettingsDetailView() {
       </div>
     </div>
   );
+}
+
+export interface SettingsDetailViewProps {
+  phasesSetter: UseStateReturnWithoutSetter<Array<BuildPhaseState>>;
 }
 
 function BuildPhase({ phase, setPhase }: BuildPhaseProps) {
@@ -141,7 +95,7 @@ interface BuildPhaseHeaderProps {
   setPhase: React.Dispatch<React.SetStateAction<BuildPhaseState>>;
 }
 
-interface BuildPhaseState extends BuildPhaseInfo {
+export interface BuildPhaseState extends BuildPhaseInfo {
   isOpen?: boolean;
 }
 
