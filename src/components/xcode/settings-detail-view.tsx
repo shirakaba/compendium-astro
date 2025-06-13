@@ -99,7 +99,7 @@ function BuildPhaseHeader({
         SVG={ArrowForwardIos}
         className="size-2.5 text-xcode-accordion-arrow group-data-open:rotate-90 active:text-xcode-accordion-arrow-active"
       />
-      <h1 className="cursor-default text-xs font-bold select-none">{`${title}${suffix}`}</h1>
+      <h1 className="cursor-default text-xs font-bold whitespace-pre select-none">{`${title}${suffix}`}</h1>
     </div>
   );
 }

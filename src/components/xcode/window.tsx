@@ -20,7 +20,7 @@ export function XcodeWindow({
 
   return (
     <WindowShadowPadding {...props} className={className}>
-      <div className="relative flex h-40 min-h-[360px] resize flex-col overflow-hidden rounded-lg bg-appkit-title-bar text-sm text-black shadow-appkit-window dark:text-white">
+      <div className="window relative flex h-40 min-h-[360px] resize flex-col overflow-hidden rounded-lg bg-appkit-title-bar text-sm text-black shadow-appkit-window dark:text-white">
         <TitleBar />
         <div className="flex bg-appkit-content-view">
           <TabBar />
