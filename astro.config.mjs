@@ -42,6 +42,7 @@ export default defineConfig({
   ],
 
   vite: {
+    ssr: { noExternal: ['monaco-editor'] },
     plugins: [
       tailwindcss(),
       svgr({

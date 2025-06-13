@@ -5,10 +5,17 @@ import { TextField, Input, Form, Label, TextArea } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { match } from 'ts-pattern';
 
+import { Editor } from '../editor';
+
 import { Icon } from './icon-button';
 
 export function SettingsDetailView() {
   const [phases, setPhases] = useState<Array<BuildPhaseState>>([
+    {
+      title: 'Bundle React Native code and images',
+      isOpen: true,
+      contents: { type: 'Run Script', shell: '/bin/sh' },
+    },
     {
       title: 'Target Dependencies',
       contents: { type: 'Target Dependencies', items: [] },
@@ -48,11 +55,6 @@ export function SettingsDetailView() {
           'placeholder5',
         ],
       },
-    },
-    {
-      title: 'Bundle React Native code and images',
-      isOpen: true,
-      contents: { type: 'Run Script', shell: '/bin/sh' },
     },
     {
       title: '[CP] Copy Pods Resources',
@@ -198,6 +200,12 @@ function BuildPhaseBody({
                 className="flex flex-1 items-center gap-x-2"
               >
                 <Label className="hidden">Script</Label>
+                <Editor
+                  initialValue={
+                    "'function x() {', '\tconsole.log(\"Hello world!\");', '}'"
+                  }
+                  language="javascript"
+                />
                 <TextArea
                   className={twMerge(
                     'flex-1 px-1.5 py-1 font-mono',
