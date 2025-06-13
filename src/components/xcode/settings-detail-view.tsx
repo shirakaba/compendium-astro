@@ -15,7 +15,7 @@ export function SettingsDetailView({ phasesSetter }: SettingsDetailViewProps) {
   const [phases, setPhases] = useOptionallyManagedState(phasesSetter);
 
   return (
-    <div className="flex w-full flex-col overflow-y-auto">
+    <div className="flex w-full flex-col overflow-y-auto overscroll-contain">
       <div className="flex h-7.5 shrink-0 items-center border border-transparent border-b-appkit-divider-minor px-[5px]">
         <Icon SVG={Add} className="size-5" />
       </div>
