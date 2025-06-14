@@ -139,7 +139,19 @@ function BuildPhaseBody({
         .with({ items: P.array() }, (contents) => {
           const { type, items } = contents;
           return (
-            <Table className="w-full text-[11px]">
+            <Table
+              className="w-full text-[11px]"
+              aria-label={match(contents.type)
+                .with('Compile Sources', () => 'Sources')
+                .with('Copy Bundle Resources', () => 'Target dependencies')
+                .with(
+                  'Link Binary With Libraries',
+                  () => 'Frameworks and Libraries'
+                )
+                .with('Run Build Tool Plug-ins', () => 'Build tool plug-ins')
+                .with('Target Dependencies', () => 'Target dependencies')
+                .exhaustive()}
+            >
               <TableHeader className="text-left">
                 <Column
                   isRowHeader
@@ -398,7 +410,7 @@ function instructionsForEmptyTable(
       body: 'Add resource files here',
     }))
     .with('Compile Sources', () => ({
-      body: 'Add target dependencies here',
+      body: 'Add source files here',
     }))
     .with('Link Binary With Libraries', () => ({
       body: 'Add frameworks & libraries here',
