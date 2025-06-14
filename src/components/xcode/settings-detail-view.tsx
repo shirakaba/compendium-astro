@@ -87,7 +87,7 @@ function BuildPhaseHeader({
   return (
     <div
       {...(isOpen ? { 'data-open': '' } : {})}
-      className="group flex h-10 items-center gap-x-2"
+      className="group flex h-10 items-center gap-x-2 select-none"
       onClick={() =>
         setPhase((phase) => ({
           ...phase,
