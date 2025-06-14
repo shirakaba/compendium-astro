@@ -132,7 +132,7 @@ function BuildPhaseBody({
   return (
     <div className="pt-1 pb-3 pl-25">
       {match(contents)
-        .with({ type: 'Compile Sources' }, ({ items }) => (
+        .with({ type: 'Compile Sources' }, ({ type, items }) => (
           <Table className="w-full text-[11px]">
             <TableHeader className="text-left">
               <Column
@@ -155,26 +155,37 @@ function BuildPhaseBody({
               </Column>
             </TableHeader>
             <TableBody>
-              {items.map(({ name, compilerFlags }, i) => (
-                <Row key={i} className={styles.tableRow}>
+              {items.length ? (
+                items.map(({ name, compilerFlags }, i) => (
+                  <Row key={i} className={styles.tableRow}>
+                    <Cell
+                      className={twMerge(
+                        styles.tableRowCell,
+                        styles.tableRowFirstCell
+                      )}
+                    >
+                      {name}
+                    </Cell>
+                    <Cell
+                      className={twMerge(
+                        styles.tableRowCell,
+                        styles.tableRowLastCell
+                      )}
+                    >
+                      {compilerFlags}
+                    </Cell>
+                  </Row>
+                ))
+              ) : (
+                <Row className={styles.tableRow}>
                   <Cell
-                    className={twMerge(
-                      styles.tableRowCell,
-                      styles.tableRowFirstCell
-                    )}
+                    colSpan={2}
+                    className="h-[70px] text-center text-[#808080] dark:text-[#9c9c9c]"
                   >
-                    {name}
-                  </Cell>
-                  <Cell
-                    className={twMerge(
-                      styles.tableRowCell,
-                      styles.tableRowLastCell
-                    )}
-                  >
-                    {compilerFlags}
+                    {instructionsForEmptyTable(type).body}
                   </Cell>
                 </Row>
-              ))}
+              )}
             </TableBody>
           </Table>
         ))
@@ -318,3 +329,27 @@ type BuildPhaseContents =
       outputFiles?: Array<string>;
       outputFileLists?: Array<string>;
     };
+
+function instructionsForEmptyTable(
+  type: Extract<BuildPhaseContents, { items: Array<unknown> }>['type']
+) {
+  return match(type)
+    .returnType<{ body: string; toolbar?: string }>()
+    .with('Target Dependencies', () => ({
+      body: 'Add target dependencies here',
+    }))
+    .with('Run Build Tool Plug-ins', () => ({
+      body: "No build tool plug-ins were found in any of this target's package dependencies.",
+    }))
+    .with('Copy Bundle Resources', () => ({
+      body: 'Add resource files here',
+    }))
+    .with('Compile Sources', () => ({
+      body: 'Add target dependencies here',
+    }))
+    .with('Link Binary With Libraries', () => ({
+      body: 'Add frameworks & libraries here',
+      toolbar: 'Drag to reorder linked binaries',
+    }))
+    .exhaustive();
+}
