@@ -25,7 +25,7 @@ export const phasesIosApp: Array<BuildPhaseState> = [
     title: 'Link Binary With Libraries',
     contents: {
       type: 'Link Binary With Libraries',
-      items: [{ name: 'placeholder1' }],
+      items: [{ name: 'libPods-compendium.a' }],
     },
   },
   {

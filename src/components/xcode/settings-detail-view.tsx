@@ -1,5 +1,12 @@
 import Add from '@material-design-icons/svg/round/add.svg?react';
 import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg?react';
+import PanTool from '@material-design-icons/svg/round/pan_tool.svg?react';
+import Description from '@material-symbols/svg-500/outlined/description.svg?react';
+import DesignServices from '@material-symbols/svg-500/outlined/design_services.svg?react';
+import Draft from '@material-symbols/svg-500/outlined/draft.svg?react';
+import PhotoLibrary from '@material-symbols/svg-500/outlined/photo_library.svg?react';
+import SDK from '@material-symbols/svg-500/outlined/sdk.svg?react';
+import ViewList from '@material-symbols/svg-500/outlined/view_list.svg?react';
 import {
   TextField,
   Input,
@@ -22,6 +29,7 @@ import {
 } from '../../utils/use-optionally-managed-state';
 
 import { Icon } from './icon-button';
+import { SVG } from './svg';
 
 export function SettingsDetailView({
   phasesSetter,
@@ -196,7 +204,39 @@ function BuildPhaseBody({
                             styles.tableRowFirstCell
                           )}
                         >
-                          {name}
+                          <span className="flex items-center gap-x-1">
+                            <SVG
+                              svg={match(name)
+                                .with(P.string.endsWith('.a'), () => SDK)
+                                .with(
+                                  P.string.endsWith('.storyboard'),
+                                  () => DesignServices
+                                )
+                                .with(
+                                  P.string.endsWith('.swift'),
+                                  P.string.endsWith('.mm'),
+                                  P.string.endsWith('.m'),
+                                  P.string.endsWith('.c'),
+                                  P.string.endsWith('.cpp'),
+                                  () => Description
+                                )
+                                .with(
+                                  P.string.endsWith('.xcprivacy'),
+                                  () => PanTool
+                                )
+                                .with(
+                                  P.string.endsWith('.xcassets'),
+                                  () => PhotoLibrary
+                                )
+                                .with(
+                                  P.string.endsWith('.plist'),
+                                  () => ViewList
+                                )
+                                .otherwise(() => Draft)}
+                              className="inline size-3 fill-current dark:fill-current"
+                            />
+                            {name}
+                          </span>
                         </Cell>
                         {match(type)
                           .with(
