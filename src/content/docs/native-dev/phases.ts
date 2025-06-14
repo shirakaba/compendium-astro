@@ -11,12 +11,13 @@ export const phasesIosApp: Array<BuildPhaseState> = [
   },
   {
     title: 'Compile Sources',
+    isOpen: true,
     contents: {
-      type: 'Target Dependencies',
+      type: 'Compile Sources',
       items: [
-        'ViewController.swift',
-        'AppDelegate.swift',
-        'SceneDelegate.swift',
+        { name: 'ViewController.swift' },
+        { name: 'AppDelegate.swift' },
+        { name: 'SceneDelegate.swift' },
       ],
     },
   },

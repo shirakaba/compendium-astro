@@ -1,6 +1,18 @@
 import Add from '@material-design-icons/svg/round/add.svg?react';
 import ArrowForwardIos from '@material-design-icons/svg/round/arrow_forward_ios.svg?react';
-import { TextField, Input, Form, Label, TextArea } from 'react-aria-components';
+import {
+  TextField,
+  Input,
+  Form,
+  Label,
+  TextArea,
+  Table,
+  TableHeader,
+  TableBody,
+  Column,
+  Row,
+  Cell,
+} from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
 import { match } from 'ts-pattern';
 
@@ -120,6 +132,52 @@ function BuildPhaseBody({
   return (
     <div className="pt-1 pb-3 pl-25">
       {match(contents)
+        .with({ type: 'Compile Sources' }, ({ items }) => (
+          <Table className="w-full text-[11px]">
+            <TableHeader className="text-left">
+              <Column
+                isRowHeader
+                className={twMerge(
+                  styles.tableHeaderCol,
+                  styles.tableHeaderFirstCol
+                )}
+              >
+                Name
+              </Column>
+              <Column
+                isRowHeader
+                className={twMerge(
+                  styles.tableHeaderCol,
+                  styles.tableHeaderLastCol
+                )}
+              >
+                Compiler Flags
+              </Column>
+            </TableHeader>
+            <TableBody>
+              {items.map(({ name, compilerFlags }, i) => (
+                <Row key={i} className={styles.tableRow}>
+                  <Cell
+                    className={twMerge(
+                      styles.tableRowCell,
+                      styles.tableRowFirstCell
+                    )}
+                  >
+                    {name}
+                  </Cell>
+                  <Cell
+                    className={twMerge(
+                      styles.tableRowCell,
+                      styles.tableRowLastCell
+                    )}
+                  >
+                    {compilerFlags}
+                  </Cell>
+                </Row>
+              ))}
+            </TableBody>
+          </Table>
+        ))
         .with(
           { type: 'Run Script' },
           ({
@@ -195,6 +253,21 @@ function BuildPhaseBody({
 }
 
 const styles = {
+  tableHeaderCol: twMerge(
+    'h-7 cursor-default border border-t-transparent border-r-appkit-divider-minor border-b-appkit-divider-minor border-l-transparent font-normal whitespace-pre select-none active:bg-[#f2f2f2] active:font-bold dark:active:bg-[#363432]'
+  ),
+  tableHeaderFirstCol: twMerge('pr-1 pl-2'),
+  tableHeaderMiddleCol: twMerge('px-1'),
+  tableHeaderLastCol: twMerge('pr-2 pl-1'),
+
+  tableRow: twMerge(
+    'border border-x-transparent border-t-transparent border-b-appkit-divider-minor'
+  ),
+  tableRowCell: twMerge('cursor-default py-1 whitespace-pre select-none'),
+  tableRowFirstCell: twMerge('pl-3'),
+  tableRowMiddleCell: twMerge('px-3'),
+  tableRowLastCell: twMerge('pr-3'),
+
   inputField: twMerge(
     'box-border border border-x-[#f5f5f5] border-t-[#f5f5f5] border-b-[#d1d1d1] p-0 text-[10px] dark:border-x-[#363533] dark:border-t-[#363533] dark:border-b-[#4d4d4b] dark:bg-[#2e2d2b] dark:text-white'
   ),
