@@ -14,7 +14,7 @@ import {
   Cell,
 } from 'react-aria-components';
 import { twMerge } from 'tailwind-merge';
-import { match } from 'ts-pattern';
+import { match, P } from 'ts-pattern';
 
 import {
   useOptionallyManagedState,
@@ -93,7 +93,7 @@ function BuildPhaseHeader({
     ?.length;
   const suffix =
     typeof itemsLength === 'number'
-      ? ` (${itemsLength} ${itemsLength ? 'items' : 'item'})`
+      ? ` (${itemsLength} ${itemsLength === 1 ? 'item' : 'items'})`
       : '';
 
   return (
@@ -129,66 +129,112 @@ function BuildPhaseBody({
   phase: { contents },
   setPhase,
 }: BuildPhaseBodyProps) {
+  const colCount = match(contents.type)
+    .with('Compile Sources', 'Link Binary With Libraries', () => 2)
+    .otherwise(() => 1);
+
   return (
     <div className="pt-1 pb-3 pl-25">
       {match(contents)
-        .with({ type: 'Compile Sources' }, ({ type, items }) => (
-          <Table className="w-full text-[11px]">
-            <TableHeader className="text-left">
-              <Column
-                isRowHeader
-                className={twMerge(
-                  styles.tableHeaderCol,
-                  styles.tableHeaderFirstCol
-                )}
-              >
-                Name
-              </Column>
-              <Column
-                isRowHeader
-                className={twMerge(
-                  styles.tableHeaderCol,
-                  styles.tableHeaderLastCol
-                )}
-              >
-                Compiler Flags
-              </Column>
-            </TableHeader>
-            <TableBody>
-              {items.length ? (
-                items.map(({ name, compilerFlags }, i) => (
-                  <Row key={i} className={styles.tableRow}>
+        .with({ items: P.array() }, (contents) => {
+          const { type, items } = contents;
+          return (
+            <Table className="w-full text-[11px]">
+              <TableHeader className="text-left">
+                <Column
+                  isRowHeader
+                  className={twMerge(
+                    styles.tableHeaderCol,
+                    styles.tableHeaderFirstCol
+                  )}
+                >
+                  Name
+                </Column>
+                {match(contents.type)
+                  .with(
+                    'Compile Sources',
+                    'Link Binary With Libraries',
+                    (type) => (
+                      <Column
+                        isRowHeader
+                        className={twMerge(
+                          styles.tableHeaderCol,
+                          styles.tableHeaderLastCol
+                        )}
+                      >
+                        {match(type)
+                          .with('Compile Sources', () => 'Compiler Flags')
+                          .with('Link Binary With Libraries', () => 'Status')
+                          .exhaustive()}
+                      </Column>
+                    )
+                  )
+                  .otherwise(() => null)}
+              </TableHeader>
+              <TableBody>
+                {items.length ? (
+                  items.map((item, i) => {
+                    const { name } = item;
+
+                    return (
+                      <Row key={i} className={styles.tableRow}>
+                        <Cell
+                          className={twMerge(
+                            styles.tableRowCell,
+                            styles.tableRowFirstCell
+                          )}
+                        >
+                          {name}
+                        </Cell>
+                        {match(type)
+                          .with(
+                            'Compile Sources',
+                            'Link Binary With Libraries',
+                            () => (
+                              <Cell
+                                className={twMerge(
+                                  styles.tableRowCell,
+                                  styles.tableRowLastCell
+                                )}
+                              >
+                                {match(type)
+                                  .returnType<string | null>()
+                                  .with(
+                                    'Compile Sources',
+                                    () =>
+                                      (
+                                        item as BuildPhaseItem<'Compile Sources'>
+                                      ).compilerFlags ?? ''
+                                  )
+                                  .with('Link Binary With Libraries', () =>
+                                    (
+                                      item as BuildPhaseItem<'Link Binary With Libraries'>
+                                    ).required
+                                      ? 'Required'
+                                      : 'Optional'
+                                  )
+                                  .otherwise(() => null)}
+                              </Cell>
+                            )
+                          )
+                          .otherwise(() => null)}
+                      </Row>
+                    );
+                  })
+                ) : (
+                  <Row className={styles.tableRow}>
                     <Cell
-                      className={twMerge(
-                        styles.tableRowCell,
-                        styles.tableRowFirstCell
-                      )}
+                      colSpan={colCount}
+                      className="h-[70px] text-center text-[#808080] dark:text-[#9c9c9c]"
                     >
-                      {name}
-                    </Cell>
-                    <Cell
-                      className={twMerge(
-                        styles.tableRowCell,
-                        styles.tableRowLastCell
-                      )}
-                    >
-                      {compilerFlags}
+                      {instructionsForEmptyTable(type).body}
                     </Cell>
                   </Row>
-                ))
-              ) : (
-                <Row className={styles.tableRow}>
-                  <Cell
-                    colSpan={2}
-                    className="h-[70px] text-center text-[#808080] dark:text-[#9c9c9c]"
-                  >
-                    {instructionsForEmptyTable(type).body}
-                  </Cell>
-                </Row>
-              )}
-            </TableBody>
-          </Table>
-        ))
+                )}
+              </TableBody>
+            </Table>
+          );
+        })
         .with(
           { type: 'Run Script' },
           ({
@@ -306,7 +352,7 @@ type BuildPhaseContents =
         | 'Target Dependencies'
         | 'Run Build Tool Plug-ins'
         | 'Copy Bundle Resources';
-      items: Array<string>;
+      items: Array<{ name: string }>;
     }
   | {
       type: 'Compile Sources';
@@ -329,6 +375,13 @@ type BuildPhaseContents =
       outputFiles?: Array<string>;
       outputFileLists?: Array<string>;
     };
+
+export type BuildPhaseWithItems<
+  T extends Extract<BuildPhaseContents, { items: Array<any> }>['type'],
+> = BuildPhaseContents & { type: T };
+export type BuildPhaseItem<
+  T extends Extract<BuildPhaseContents, { items: Array<any> }>['type'],
+> = BuildPhaseWithItems<T>['items'][number];
 
 function instructionsForEmptyTable(
   type: Extract<BuildPhaseContents, { items: Array<unknown> }>['type']

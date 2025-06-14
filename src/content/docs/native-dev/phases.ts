@@ -7,7 +7,7 @@ export const phasesIosApp: Array<BuildPhaseState> = [
   },
   {
     title: 'Run Build Tool Plug-ins',
-    contents: { type: 'Target Dependencies', items: [] },
+    contents: { type: 'Run Build Tool Plug-ins', items: [] },
   },
   {
     title: 'Compile Sources',
@@ -23,13 +23,20 @@ export const phasesIosApp: Array<BuildPhaseState> = [
   },
   {
     title: 'Link Binary With Libraries',
-    contents: { type: 'Target Dependencies', items: ['placeholder1'] },
+    contents: {
+      type: 'Link Binary With Libraries',
+      items: [{ name: 'placeholder1' }],
+    },
   },
   {
     title: 'Copy Bundle Resources',
     contents: {
-      type: 'Target Dependencies',
-      items: ['LaunchScreen.storyboard', 'Assets.xcassets', 'Main.storyboard'],
+      type: 'Copy Bundle Resources',
+      items: [
+        { name: 'LaunchScreen.storyboard' },
+        { name: 'Assets.xcassets' },
+        { name: 'Main.storyboard' },
+      ],
     },
   },
 ];
@@ -41,7 +48,7 @@ export const phasesExpoApp: Array<BuildPhaseState> = [
   },
   {
     title: 'Run Build Tool Plug-ins',
-    contents: { type: 'Target Dependencies', items: [] },
+    contents: { type: 'Run Build Tool Plug-ins', items: [] },
   },
   {
     title: '[CP] Check Pods Manifest.lock',
@@ -54,28 +61,31 @@ export const phasesExpoApp: Array<BuildPhaseState> = [
   {
     title: 'Compile Sources',
     contents: {
-      type: 'Target Dependencies',
+      type: 'Compile Sources',
       items: [
-        'AppDelegate.mm',
-        'main.m',
-        'ExpoModulesProvider.swift',
-        'noop-file.swift',
+        { name: 'AppDelegate.mm' },
+        { name: 'main.m' },
+        { name: 'ExpoModulesProvider.swift' },
+        { name: 'noop-file.swift' },
       ],
     },
   },
   {
     title: 'Link Binary With Libraries',
-    contents: { type: 'Target Dependencies', items: ['libPods-compendium.a'] },
+    contents: {
+      type: 'Link Binary With Libraries',
+      items: [{ name: 'libPods-compendium.a' }],
+    },
   },
   {
     title: 'Copy Bundle Resources',
     contents: {
-      type: 'Target Dependencies',
+      type: 'Copy Bundle Resources',
       items: [
-        'Expo.plist',
-        'Images.xcassets',
-        'SplashScreen.storyboard',
-        'PrivacyInfo.xcprivacy',
+        { name: 'Expo.plist' },
+        { name: 'Images.xcassets' },
+        { name: 'SplashScreen.storyboard' },
+        { name: 'PrivacyInfo.xcprivacy' },
       ],
     },
   },
